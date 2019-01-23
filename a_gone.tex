@@ -1,0 +1,13 @@
+
+{\color{red} some floating text.}
+
+\mypara{The dense sub-graph clustering problem ($\densegraph$).} Given a graph $G = \{V, E\}$, a sequence $\{\ell_i\}_{i \leq k}$ and a density parameter $\rho.$ The algorithm needs to output $\{\hat B_i\}_{i \leq k}$ such that \emph{(i)} $|\hat B_i| = \ell_i$ for all $i$, and \emph{(ii)} the subgraph induced by $\hat B_i$ contains at least $\rho \binom{\ell_i}{2}$ edges for all $i$ (for all $i$). {\color{red} Appendix describes the full specification (i.e., an algorithm's expected behavior when no feasible solution exists).}
+
+
+This section handles the case, in which the block sizes are non-uniform. We aim to design an algorithm that outputs $\hat B_1, \hat B_2, \dots \hat B_k$ such that the portion of mis-classified nodes is a small constant. 
+
+We assume that $\ell_1 \geq \ell_2 \geq \dots \ell_k$ and $\ell_k$ is polynomial in $d$. In addition, we assume that that $\ell_k/\ell_1 \leq c$ for some small constant $c$ such that $c > 100 \epsilon$. We also assume that we know the values $\{\ell_i\}_{i \leq k}$. 
+
+We assume that our algorithm has oracle access to a solver for the following problem. 
+
+Let us refer to the solver for the dense graph clustering problem as $\proc{DG-Solver}(G, \{\ell_i\}_{i\leq k}, \rho)$. 

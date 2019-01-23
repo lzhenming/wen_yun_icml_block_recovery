@@ -1,0 +1,28 @@
+\section{Missing proof for the lower bound}\label{asec:lower}
+We now prove for the lower bound in Theorem~\ref{thm:main}
+We shall treat $\mX$ as given and $M$ as random variables. One can see that $\{M_{i, :}\}_i$ are independent Gaussian random variables. In addition, $M_{i, :}$ and $M_{j, :}$ follow the same distribution if and only if $i$ and $j$ are in the same block. Therefore, we can view $\{M_{i, :}\}_{i \leq d}$ as random variables from a mixture of $k = 2$ distributions (conditioned on $\mX$). 
+
+We have $\mY_{:, i} = \mX M^{\transpose}_{i, :}$ (using the assumption that $E = 0$). Conditioned on $\mX$, $\{\mY_{:, i}\}_{i \leq d} $ are independent Gaussian random variables; $\mY_{:, i}$ and $\mY_{:, j}$ follow the same distribution if and only if $i$ and $j$ are in the same block. 
+
+Let the distribution for $\mY_{:, i}$ for $i$ in the $t$-th block ($t \in \{1, 2\}$) be $\cald_t$. $\{\mY_{:, i}\}$ thus can be viewed as coming from mixture of $\cald_1$ and $\cald_2$. 
+
+Note when we can identify two blocks, we are essentially ``disentangling'' points of $\mY_{:, i}$ from distributions $\cald_1$ and $\cald_2$. We need only to show that 
+$\|\cald_1 - \cald_2\|_{TV} \leq 0.5$ to establish our lower bound.
+
+
+We next compute $\|\cald_1 - \cald_2\|_{TV}$. Recall that we let $\mX_{(1)}$ ($\mX_{(2)}$) be the matrix that consists of columns of $\mX$ from $B_1$ ($B_2$). Let $\Sigma(\cald_1)$ ($\Sigma(\cald_2)$) be the covariance matrix for $\cald_1$ ($\cald_2$). We have 
+
+\begin{equation}
+    \Sigma(\cald_1) = \mX_{(1)}\mX^{\transpose}_{(1)} \mbox{ and } \Sigma(\cald_2) = \mX_{(2)}\mX^{\transpose}_{(2)}. 
+\end{equation}
+
+By Lemma~\cite{lem:randommat} and using the assumption that $c_0$ is sufficiently small, we also have
+\begin{equation}
+    \sigma_i(\mX_{(1)}), \sigma_{i}(\mX_{(2)}) \in_p (1\pm 0.01)\sqrt{\ell}. 
+\end{equation}
+Therefore, both $\Sigma(\cald_1)$ and $\Sigma(\cald_2)$ are ``RIP'', that is, for any $\mz \in \reals^{n}$, we have $\|\Sigma(\cald_t)\mz\|_2 \in_p (1\pm 0.01)\sqrt{\ell} \|\mz\|_2$. Then we can do a straightforward computation to get that
+\begin{equation}
+    \int_{\mz}\left|f_{\cald_1}(\mz) - f_{\cald_2}(\mz)\right| dz \leq 0.5, 
+\end{equation}
+where $f_{\cald_1}(\mz)$ and $f_{\cald_2}(\mz)$ are pdfs of $\cald_1$ and $\cald_2$ respectively. This completes our proof. 
+

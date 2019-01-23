@@ -1,0 +1,64 @@
+\section{Pseudo-code for solving the regression problem}
+See Fig.~\ref{fig:regression_algo} for our algorithm to solve the regression problem $\my = M \mx + \varepsilon$. 
+
+\begin{figure}
+    \centering
+{\small
+    \begin{codebox}
+\Procname{$\proc{Regression-Solver}(
+\mX, \mY
+)$}
+\li \Comment \textbf{Identify blocks using our BRP solver.} 
+\li $\{B_i\}_{i \leq k} \gets \proc{Find-Blocks}(\mY)$
+\li \For $i \gets 1$ to $k$
+\li \Do Let $\mX_{(i)}$ and $\mY_{(i)}$ be the submatrices of $\mX$ and $\mY$ induced by $B_i$
+\li $\hat M_{(i)}\gets (\mX^{\transpose}_{(i)}\mX_{(i)})^{-1}\mX_{(i)}\mY_{(i)}$
+\End
+\li Let $\hat M$ be a matrix such that
+its $i$-th block submatrix is $\hat M_{(i)}$. 
+\li \Return $\hat M$. 
+\end{codebox}
+}
+\caption{Our algorithm for solving the high-dimensional regression problem.}
+    \label{fig:regression_algo}
+\end{figure}
+
+
+{\color{red} we now start to change $\epsilon$ to $\varepsilon$.}
+We now use our BRP solver to solve the regression problem $\my = M \mx + \varepsilon$ and compare our performance against baselines (shrinkage and variable selection methods).  
+
+\iffalse
+Our algorithm consists of two steps. First, we invoke $\proc{Find-Blocks}$ to identify block structures. Then we run a regression model for each block. See Fig.~\ref{fig:regression_algo}. 
+
+\begin{lemma}\label{lem:regression} Consider using $\proc{Regression-Solver}$ to estimate $M$. Let $\hat M$ be the algorithm's output. Then for any $i \in [d]$:
+$\frac{\langle \hat M_{i, :}, M_{i, :}\rangle}{\|M_{i, :}\|^2} \in_p 1\pm 0.01$
+\end{lemma}
+
+\begin{proof}Let $B_j$ be the block that contains $i$. Recall that $\mX_{(j)}$ ($\mY_{(j)}$) is the submatrix of $\mX$ ($\mY$) that consists of only those columns in $B_j$. 
+
+We have 
+\begin{equation}
+    \langle \hat M_{i, :}, M_{i, :} \rangle = \langle (\mX^{\transpose}_{(j)}\mX_{(j)})^{-1}\mX^{\transpose}_{(j)}(\mX_{(j)} \bar M_{i, :} + E_{:, i}), \bar M_{i, :} \rangle = \|\bar M_{i, :}\|^2 + \bar M_{i, :}  (\mX^{\transpose}_{(j)}\mX_{(j)})^{-1}\mX^{\transpose}_{(j)}E_{:, i}
+\end{equation}
+First, note that $\|\bar M_{i}\|^2 = \sigma^2 \ell$. Next, the matrix $(\mX^{\transpose}_{(j)}\mX_{(j)})^{-1}$ is full rank and all its singular values are in $\frac{1\pm 0.01}{\sigma^2_x n}$ with overwhelming probability. We can also see that $\|\mX^{\transpose}_{(j)}E_{:, i}\| \in_p \Theta(\sigma_x \sigma_{\epsilon}\sqrt{\ell n})$. We can see that $\bar M_{i, :}  (\mX^{\transpose}_{(j)}\mX_{(j)})^{-1}\mX^{\transpose}_{(j)}E_{:, i} \in_p \tilde O(1)$ and thus is a smaller order term. 
+\end{proof}
+
+\myparab{Performance of shrinkage based estimators.} We now outline the analysis of the performance of the ridge regression (for each of the coordinates of $\my$). The analysis for other shrinkage methods is similar. 
+
+Let $\tilde M$ be the estimator from the ridge regression. 
+We shall show that for any $i \in [d]$, $\langle \tilde M_{i, :}, M_{i, :}\rangle < 0$ with constant probability (with respect to $\mX$ and $E$). Note that when  $\langle \tilde M_{i, :}, M_{i, :}\rangle < 0$, the forecast quality is worse than trivial (i.e., always forecast $\hat \my = 0$). 
+
+The ridge estimator for the linear model for the $i$-th coordinate is $\tilde M^{\transpose}_{i, :} = (\mX^{\transpose}\mX + \lambda I)^{-1}\mX^{\transpose}\mY_{:, i}$. Note that $\mX^{\transpose} \mX \in \reals^{d \times d}$ but the rank of $\mX^{\transpose}\mX$ is only $n = o(d)$. Thus, heavy regularization is needed in this case and we can assume that $(\mX^{\transpose}\mX+\lambda I)^{-1} \approx (\lambda I)^{-1}$ (another way to interpret this assumption is that we have oracle access to the ground-truth co-variance matrix of $\mx$). We shall next show that 
+\begin{equation}
+\langle \lambda I \mX^{\transpose}\mY_{:, i}, M^{\transpose}_{i, :} \rangle = 
+\lambda \langle  \mX^{\transpose}\mY_{:, i}, M^{\transpose}_{i, :} \rangle < 0
+\end{equation}
+happens with constant probability. Note that 
+\begin{equation}
+    \langle  \mX^{\transpose}\mY_{:, i}, M^{\transpose}_{i, :} \rangle = M_{i, :} \mX^{\transpose}\mX M^{\transpose}_{i, :} + M_{i, :}\mX^{\transpose} E_{:, i}.  
+\end{equation}
+The standard deviations of both terms are of order $\Theta(\ell)$ (by using similar techniques developed in Section~\ref{sec:analysis}). Thus with constant probability $\langle \tilde M_{i, :}, M_{i, :}\rangle < 0$. 
+
+\myparab{Performance of variable-selection based methods.} One can see that if we use the empirical covariance between $\mY_{:, i}$ and $\mX_{:, j}$ to determine whether $j$ and $i$ belong to the same block, we will have a constant fraction of false positive (a constant fraction of $d - \ell$ irrelevant covariates will enter the regression). This also leads to that with constant probability the forecast produced by variable selection based methods is worse than trivial. 
+\fi
+

@@ -1,0 +1,100 @@
+\section{Preliminaries}\label{sec:prelim}
+Sec.~\ref{sec:notations} describes the notation and Sec.~\ref{sec:randommatrix} describes properties of random matrices needed in our analysis. 
+
+\subsection{Additional notations}\label{sec:notations}
+\myparab{Matrices.} Recall that $M \in \reals^{d \times d}$ is the matrix that we are interested in and $B_1$, $B_2$, ..., $B_{\kappa}$ are a partition of $[d]$. Let $\ell_i$ be the length of the $i$-th block. Let $I_d \in \reals^{d \times d}$ be an identity matrix. We can stack together all $\mx_i$ ($\my_i$) to build a data matrix $\mX \in \reals^{n \times d}$ ($\mY \in \reals^{n \times d}$): the $i$-th row of $\mX$ ($\mY$) is $\mx^{\transpose}_i$ ($\my^{\transpose}_i$). The $j$-th entry of $t$-th observation is $\mY_{j, t}$. Similarly, we may stack all $\epsilon_t$ to produce a matrix $E\in \reals^{n \times d}$. 
+
+%\mypara{Example.} Using the above notation, solving the regression problem appeared in {\color{blue} Example 1} is equivalent to solving the optimization problem $\arg \min_M \|\mY - \mX M^{\transpose}\|^2_F$
+
+
+\iffalse
+\mypara{Permutation.} Because we assume that $M$ is sampled from stochastic block models, we may permute the coordinates in the model so that the transition matrix $M^{\Pi}$ after the permutation exhibits block structure:
+\begin{equation}\label{eqn:block}
+    M^{\Pi} = 
+    \left(
+    \begin{array}{cccc}
+        M_1 & 0 & \dots  & 0 \\
+        0  &  M_2  & \dots & 0 \\
+         & \dots & \dots   \\
+        0 & \dots & \dots & M_k
+     \end{array}
+    \right), 
+\end{equation}
+\fi
+
+
+\myparab{Statistics.} The covariance matrix of $\my$ is $\Sigma \in \reals^{d\times d}$. Let
+$ \hat \Sigma_{i,j} = \frac{\sum_{t = 1}^n \mY_{t, i} \mY_{t, j}}{n}$. This resembles the empirical covariance matrix except that we do not offset the means here. 
+The cdf of the standard Gaussian distribution is denoted by $\Phi(x)$. For any matrix $M$, $M_{i, :}$ is the $i$-th row of $M$ and $M_{:, j}$ is the $j$-th column of $M$.
+
+
+\myparab{Probabilistic analysis and tail bounds.} We say a quantity $\delta$ is negligible if $\delta = O(d^{-c})$ for any constant $c$ (recall that $d$ is the total number of rows in $M$). We shall use $\delta$, $\delta_1$, $\delta_2$, etc to represent negligible quantities. 
+We say an event happens with negligible probability if the probability is $\delta$ for some negligible $\delta$. Similarly, an event happens with overwhelming probability if the probability is $1 - \delta$. 
+ 
+Throughout our analysis, we will need to use various tail bounds to analyze the error/failure probabilities and then use a union bound to bound all the failure events. We adopt the convention that when we have room to tune the tail bound, we always set tail probability be negligible (e.g., $\exp(-\Theta(\log^2d))$). 
+
+%{\color{red}So $\xi=\Theta(\log d)$?}
+%For example, when we use a standard Chernoff bound, we set the tail bound to be $\exp(-\Theta(\log^2d))$ unless otherwise stated. In this way, when we apply union bounds the error/failure probability is still negligible. 
+ 
+Let $f, g, h \geq 0$ be (possibly random) variables. Let $\delta$ be a negligible quantity. We write $f <_p g$ when $\Pr[f < g] \geq 1 - \delta$. $g \pm h$ refers to the interval $[g - h, g + h ]$. We write $f \in_p g \pm h$ if $\Pr[f \in g\pm h] \geq 1 - \delta$. We note that $\geq_p/\in_p$/etc. refer to finite sample concentration bounds instead of ``almost sure'' properties. 
+
+\myparab{Graphs.} Let $G = \{V(G), E(G)\}$ be a graph \footnote{Note that $E$ is overloaded (to follow the convention from ML and graph theory community). When we refer to edges, we always use $E(G)$.}. %Let $i \in V$. We refer to the adjacency matrix for $G$ as $A$. 
+Let $i \in V$. The set of $i$'s neighbors is $N(i)$. 
+
+
+
+\subsection{Random matrices}\label{sec:randommatrix}
+Consider a random matrix $\mX \in \reals^{n \times \ell}$, in which each entry is an independent Gaussian $N(0, 1)$. We assume that $n \geq \ell$. 
+
+\begin{lemma}\label{lem:randommat}~\cite{rudelson2010non,chafai2009singular} 
+Let $\mX \in \reals^{n \times \ell}$ (where $n < \ell$) be a random Gaussian matrix. Let $\sigma_1(\mX) \geq \sigma_2(\mX) \geq \dots \geq \sigma_{\ell}(\mX)$ be singular values of $\mX$. Also, let the SVD of $\mX$ be 
+$\mX = U_X \Sigma_X V^{\transpose}_X$
+
+\mypara{1. Extreme singular values of $\mX$:} 
+$\Pr[\sqrt n - \sqrt \ell - t \leq \sigma_{\ell}(\mX) \leq \sigma_1(\mX) \leq \sqrt n + \sqrt \ell + t
+    ] \\
+     \geq  1 - 2\exp(-t^2/2).$
+\iffalse
+{\small
+\begin{align*}
+    & \Pr[\sqrt n - \sqrt \ell - t \leq \sigma_{\ell}(\mX) \leq \sigma_1(\mX) \leq \sqrt n + \sqrt \ell + t
+    ] \\
+    & \geq  1 - 2\exp(-t^2/2).\label{eqn:extremevalue} 
+\end{align*}
+}
+\fi
+
+\mypara{2. Distribution of $U_X$, $\Sigma_X$, and $V_X$.} The matrices $U_X$ and $V_X$ are random unitary matrices. In addition, $U_X$, $\Sigma_X$, and $V_X$ are independent. 
+\end{lemma}
+
+Standard techniques can be used to analyze $\|\mX\|_F^2$. 
+
+\begin{lemma}\label{lem:Fnorm} Let $\mX \in \reals^{n \times \ell}$ be a random Gaussian matrix. We have 
+$\E\|\mX\|^2_F = n \dots \ell$
+and when $t \leq \sqrt{n\ell}$
+\begin{equation}\label{eqn:fnormconcentrate}
+    \Pr\left[ |\|\mX\|^2_F - \E[\|\mX\|^2_F]| \leq -t \sqrt{n\ell} \right] 
+     \leq 2 \exp\{-t^2/8\}
+\end{equation}
+\end{lemma}
+
+See Appendix~\ref{asec:missingprelim} for the full analysis. Because $\sum_{i \leq \ell}\sigma^2_i(\mX) = \|\mX\|^2_F$, we may use Lemma~\ref{lem:Fnorm} to build a concentration bound for $\sum_{i \leq \ell}\sigma^2_i(\mX)$ as well. 
+
+
+\iffalse
+Recall that $\sum_{i \leq \ell}\sigma^2_i(\mX) = \|\mX\|^2_F$. 
+Lemma~\ref{lem:Fnorm} also gives a concentration bound for $\sum_{i \leq \ell}\sigma^2_i(\mX)$. 
+
+\begin{equation}
+    \Pr\left[  \sum_{i \leq \ell}\sigma^2_i(\mX) - n \ell \geq t \sqrt{n \ell}\right] \leq \exp\{-\frac{t^2}{4(1+c_1)}\}
+\end{equation}
+where $c_1 \geq \frac{t}{\sqrt{n\ell}}$ and $t >0$.
+
+\begin{equation}
+    \Pr\left[  \sum_{i \leq \ell}\sigma^2_i(\mX) - n \ell \leq -t \sqrt{n \ell}\right] \leq \exp\{-\frac{t^2}{4(1-c_2)}\}
+\end{equation}
+where $0<t<\sqrt{n\ell}$ and $0 \leq c_2 \leq \frac{t}{\sqrt{n\ell}}$.
+
+\fi
+
+

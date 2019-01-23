@@ -1,0 +1,9 @@
+\begin{abstract}
+This work studies a stylized "signal recovery" problem: let $M \in \reals^{d \times d}$ be a large square matrix and $\mx_1, \mx_2, \dots, \mx_n$ be a sequence of i.i.d Gaussian vectors in $\reals^d$. We observe the measurements $\my_t = M \mx_t +\varepsilon_t$, where $\varepsilon_t$ is a noise term (for $t < n$), and aim to recover the structure of M by $y_t$'s. This problem is widely studied in the literature because it is often applied to building forecasting models. For example, when $M$ is low rank, the problem reduces to factor models~\cite{stock2011dynamic}; when $M$ is low rank and $\varepsilon_i$ is sparse, it becomes a Principal Component Pursuit problem~\cite{zhou2010stable}.
+
+We tackle a fundamental case, in which $M$ possesses the block diagonal structure. Our main result is a tight characterization of the problem's sample complexity $n$: it needs only to be linear to the size of the largest block (and sub-linear to $d$) to recover the block structure. We make connections between our problem and random graph models (small world and stochastic block models), and generalize the graph inference algorithm to our setting. Our algorithm is combinatorial in nature, and is in sharpe contrast to existing shrinkage-based regularization that require significantly more samples. Finally, we apply our algorithm to solve a high-dimensional regression problem to obtain solution that uses a sub-linear sample size to produce forecasts. The algorithm explains why  widely used heuristics work well in our model.
+\end{abstract}
+
+{\color{red}
+Current round for change of notations: noise is $\varepsilon$ instead of $\epsilon$. Number of blocks: $\kappa$ instead of $k$. 
+}

@@ -1,0 +1,56 @@
+\section{The alogirhtm $\proc{Cluster-Find-Blocks}$}\label{asec:clustering}
+
+This section describes our algorithm $\proc{Cluster-Find-Blocks}$ that relies on an oracle access to a solver for the following problem.
+
+
+\myparab{The dense sub-graph clustering problem.} Given a graph $G = \{V, E\}$, a sequence $\{\ell_i\}_{i \leq k}$ and a density parameter $\rho.$ The algorithm needs to output $\{\hat B_i\}_{i \leq k}$ such that \emph{(i)} $|\hat B_i| = \ell_i$ for all $i$, and \emph{(ii)} the subgraph induced by $\hat B_i$ contains at least $\rho \binom{\ell_i}{2}$ edges for all $i$ (i.e., the density is at least $\rho$). If there is no feasible solution, the algorithm will output a maximal $k'$ and $\{ \hat B_i \}_{i \leq k'}$ such that $|\hat B_i| = \ell_i$ for all $i$ and the density of the subgraph induced by $\hat B_i$ is at least $\rho$ (for all $i$). 
+
+
+The densest  subgraph problem is closely related to clustering problems~\cite{gunnemann2010subspace,lee2010survey,schaeffer2007graph}. 
+While this problem is an NP-hard problem~\cite{feige2001dense,bhaskara2010detecting}, it can be solved fairly well in practice~\cite{harenberg2014community,lee2010survey} and thus we assume we have oracle access to the solver for $\densegraph$ (see also~\cite{rohe2011spectral,wolfe2013nonparametric,olhede2014network}). We shall call the solver to $\densegraph$ as $\proc{DG-Solver}(G, \{\ell\}_i, \rho)$.  
+ 
+\begin{lemma}\label{lem:clusterquality}
+Consider the block discovery problem, in which $\ell_i \geq d^{\frac 2 3}\log^2 d$ for all $i$. 
+Let $\epsilon$ be an arbitrary small constant and $c$ (that depends on $\epsilon$) be a suitably large constant. Let $n > c \ell_{\max}$. 
+
+Assume that  (i) $\ell_k/\ell_{1} > c$ for some small constant $c$, (ii) we have oracle access to a $\densegraph$ solver, and (iii) we know the values of $\ell_i$ ($i \leq k$). There exists an algorithm that uses the oracle to produce $\hat B_1, \hat B_2, \dots, \hat B_k$ and there exists a $\pi$ such that $|\hat B_{i} \cap B_{\pi(i)}| \leq 5\epsilon \ell_i$. In other words, the total number of mis-classified nodes is at most $5\epsilon d$.
+\end{lemma}
+
+
+Before proceeding, we make a few remarks. (i) the constants in the assumptions are set for exposition purpose and are not optimized, (ii) Because we aim to build an algorithm that has a constant classification error rate, when $\ell_i = o(\ell_1)$ we may not be able to detect a non-trivial portion of nodes in $B_i$. Thus, we assume that $\ell_k / \ell_1 = \Theta(1)$. It remains an open problem to solve the case that $\ell_k/\ell_1 = o(1)$, (ii) the assumption that we know $\{\ell_i\}_{i \leq k}$ can be relaxed by using the standard sequential guess trick (i.e., guess $\ell_1$ until the guess is correct, then guess $\ell_2$, etc). The number of calls to the oracles remains polynomial, and (iv) we define the dense subgraph problem in a manner that helps the presentation. We recover block structure when we have oracle access to solvers for any reasonable graph clustering problems. 
+
+
+\myparab{Finding the block structure through $\proc{DG-Solver}$.} See Fig.~\ref{fig:cluster_algo} for $\proc{Cluster-Find-Blocks}$. This algorithm will also construct a graph $G$ like $\proc{Neighbor-Find-Blocks}$. Then we will feed $G$ to $\proc{DG-Solver}$ using $\rho = (1-3 \epsilon)$. The output of $\proc{DG-Solver}$ is the blocks we need to find. 
+
+
+\begin{lemma}\label{lem:clustering} Let $\{\hat B_i\}_{i \leq k}$ be the output of $\proc{DG-Solver}(G, \{\ell_i\}_{i \leq k}, (1-3\epsilon))$. For any $\hat B_i$, there exists a $j$ such that $|B_j \cap \hat B_i| \geq (1-5\epsilon) \ell_i$. 
+\end{lemma}
+
+Lemma~\ref{lem:clustering} says that for any $\hat B_i$, $(1-5\epsilon)$ portion of the nodes come from the same block $B_j$. We shall call $B_j$ dominates the block $\hat B_i$. 
+
+\begin{proof}[Proof of Lemma~\ref{lem:clustering}] Wlog, we may assume that $\hat B_i$ consists of nodes from two blocks $B_{j_1}$ and $B_{j_2}$. Let us assume that $|B_{j_1} \cap \hat B_i| > |B_{j_2} \cap \hat B_i| \geq 5 \epsilon \ell_i$. We can show a contradiction exists: by using results in Proposition~\ref{prop:interaction}, we can see that the number of edges in the subgraph induced by $\hat B_i$ is $< (1-3\epsilon)\binom{\ell_i}{2}$. 
+\end{proof}
+
+We may then use Lemma~\ref{lem:clustering} to argue that each $B_i$ can dominate exactly one $\hat B_j$ (by using induction and the assumption that $c > 100 \epsilon)$ and thus prove Lemma~\ref{lem:clusterquality}.
+
+\begin{figure}
+{\small
+    \centering
+    \begin{codebox}
+\Procname{$\proc{Cluster-Find-Blocks}(\mY, \{\ell_i\}_{i \leq k})$}
+\li $\hat \Sigma = \frac{1}{n}\mY^{\transpose} \mY$
+\li \Comment \textbf{Construct $G$}
+\li $\tau = c_0 \sqrt \ell$ \Comment $c_0$ is a suitable constant (discussed in Sec.~\ref{sec:firstmoment}).
+\li $V(G) \gets [d]$
+\li \For $i \neq j \in [d]$
+\li \Do \If $|\hat \Sigma_{i,j}| > \tau$ \Comment $\theta$ is a parameter tuned in Sec.~\ref{sec:secondmoment}.
+\li \Then  Insert $\{i, j\} \in E(G)$
+\End
+\End
+\li $\hat B_1, \dots, \hat B_{k} \gets \proc{DG-Solver}(\{\ell_i\}_{i \leq k}, 1- 3\epsilon)$
+\li \Return $\hat B_1, \dots \hat B_k$. 
+\end{codebox}
+}
+\caption{Our algorithm to detect blocks based on an oracle access to $\proc{DG-Solver}$.}
+    \label{fig:cluster_algo}
+\end{figure}

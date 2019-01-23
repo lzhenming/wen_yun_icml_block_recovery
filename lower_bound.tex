@@ -1,0 +1,25 @@
+\section{Auxiliary results}
+\subsection{Lower bound}
+This section outlines the proof for the lower bound in Theorem~\ref{thm:main} ( See Appendix~\ref{asec:lower} for a complete analysis). We prove a lower bound for a simplified case (and thus it will continue to hold for the more complex setting). We assume that $k = 2$, $\ell_1 = \ell_2 = \ell$, $\sigma = 1$, and $E = 0$ (we assume that we are in a noiseless setting). 
+
+We shall show that there exists a $c_0$ such that when $n < c_0 \ell$, any algorithm that attempts to solve the BSR problem, with constant probability it errs on a constant fraction of the rows. 
+
+\myparab{Major proof technique.} 
+We use the notion of ``statistically indistinguisability''(see e.g.~\cite{batu2013testing}): let $\cald_1$ and $\cald_2$ be two distributions on the same support $\cals$. Let $f_1(\cdot)$ and $f_2(\cdot)$ be their pdfs. Define the total variation distance (statistical distance) between $\cald_1$ and $\cald_2$ be 
+\begin{equation}
+    \|\cald_1 - \cald_2\|_{TV} = \frac 1 2\int_{\mx \in \cals}|f_1(\mx) - f_2(\mx)| d\mx. 
+\end{equation}
+
+%Note that $\|\cald_1 - \cald_2\|_{TV} \in [0, 1]$. When $\|\cald_1 - \cald_2\|_{TV} = 0$, the distributions of $\cald_1$ and $\cald_2$ coincide. When $|\cald_1 - \cald_2\|_{TV} = 1$, Their supports do not overlap (a.s.). 
+
+Let $\mx$ be a sample from one of  $\cald_1$ or $\cald_2$. 
+The total variation distance measures
+how well we can correctly guess where $\mx$ is from.
+A crucial observation is that when $\|\cald_1 - \cald_2\|_{TV} = c$, for $c < 1$, then with constant probability we err. Furthermore, if $\mx_1, \mx_2, \dots, \mx_t$ are points, each of which is from $\cald_1$ and $\cald_2$, then any algorithms that attempt to classify these $\mx_i$'s will err on a constant fraction of them with constant probability. 
+ 
+
+We use TV-distance to prove the lower bound. We treat $\mX$ as given and $M$ as random variables. One can see that $\{M_{i, :}\}_i$ are independent Gaussian random variables. 
+We have $\mY_{:, i} = \mX M^{\transpose}_{i, :}$ (using the assumption that $E = 0$). Conditioned on $\mX$, $\{\mY_{:, i}\}_{i \leq d} $ are independent Gaussian random variables; $\mY_{:, i}$ and $\mY_{:, j}$ follow the same distribution if and only if $i$ and $j$ are in the same block. 
+
+Let the distribution for $\mY_{:, i}$ for $i$ in the $t$-th block ($t \in \{1, 2\}$) be $\cald_t$. $\{\mY_{:, i}\}$ thus can be viewed as coming from mixture of $\cald_1$ and $\cald_2$. Note when we can identify two blocks, we are essentially ``disentangling'' points of $\mY_{:, i}$ from distributions $\cald_1$ and $\cald_2$. We need only to show that 
+$\|\cald_1 - \cald_2\|_{TV} \leq 0.5$ to establish our lower bound. 

@@ -1,0 +1,958 @@
+\section{Missing Analysis for Section~\ref{sec:analysis}}
+This section completes missing analysis for Section~\ref{sec:analysis}. We first present important building blocks for our analysis. Then we will complete the missing proofs in Sec.~\ref{sec:analysis}. 
+
+\subsection{Important building blocks}
+This section presents building blocks for analyzing the interactions of two (possibly the same) random matrices. 
+
+\begin{lemma}\label{prop:sameblock_term}
+Let $Z \in \reals^{\ell}$ be a row vector with entries following i.i.d. standard Gaussian distribution and $X \in \reals^{n\times \ell}$ be a matrix with entries as i.i.d. standard Gaussian random variables. We have
+\begin{equation}
+    Z(X^{\transpose}X)^{c_1}Z^{\transpose} 
+    \in_p (\sqrt n \pm \sqrt \ell \pm \xi)^{2c_0}(\ell \pm \xi \sqrt{\ell})
+\end{equation}
+where $c_1$ is a positive integer.
+\end{lemma}
+
+This lemma asserts that $X^{\transpose}X$ is ``reasonably'' RIP as long as $\ell$ is a constant times smaller. We can prove Lemma~\ref{prop:sameblock_term} by Lemma~\ref{lem:randommat}. 
+
+ 
+
+\begin{lemma} \label{prop:difblock_term}
+Let $Z \in \reals^{\ell}$ be a vector with entries following i.i.d. standard Gaussian distribution and $X_1 \in \reals^{n\times \ell}, X_2 \in \reals^{n\times \ell}$ be two independent matrices with entries as i.i.d. standard Gaussian random variables.  Let $c_2$ be a positive integer, and we have
+\begin{equation}
+    Z X_1^{\transpose}X_2X_2^{\transpose}X_1 Z^{\transpose}
+    \in_p (\sqrt n \pm \sqrt \ell \pm \xi)^{2}(\ell^{2} \pm \xi^2 \ell^{\frac{3}{2}})
+\end{equation}
+
+\begin{equation}
+    Z(X_1^{\transpose}X_2X_2^{\transpose}X_1)^{2} Z^{\transpose}
+    \in_p (\sqrt n \pm \sqrt \ell \pm \xi)^{4}(2\ell^3 + \ell^2 \pm \xi^2 \ell^{\frac{5}{2}})
+\end{equation}
+
+\begin{equation}
+    Z(X_1^{\transpose}X_2)(X_2^{\transpose}X_2)^{c_2}(X_2^{\transpose}X_1) Z^{\transpose}
+    \in_p (\sqrt n \pm \sqrt \ell \pm \xi)^{2+2c_2}(\ell^{2} \pm \xi^2 \ell^{\frac{3}{2}})
+\end{equation}
+\end{lemma}
+
+\begin{proof}[Proof of Lemma~\ref{prop:difblock_term}]
+Let the SVD of $X_1$ be $X_1 = U_1\Sigma_{1}V^{\transpose}_{1}$, where $U_1\in \reals^{n\times \ell}$, $\Sigma_1 \in \reals^{\ell \times \ell}$, and $V_{1} \in \reals^{\ell \times \ell}$. 
+
+Define 
+\begin{equation}
+B \equiv (\Sigma_{1}U^{\transpose}_{1}X_{2} X^{\transpose}_{2}U_{1}\Sigma_{1})^{c_1}
+\end{equation}
+
+
+Let $X \equiv U^{\transpose}_{1}X_{2}$, One can see that conditioned on $X_{1}$, $V$ is a random matrix with entries following i.i.d. standard Gaussian distribution.
+
+\iffalse
+Conditioned on $X_{1}$, 
+\begin{equation}
+\begin{split}
+    \left(U^{\transpose}_{1}X_{2}\right)_{t,s}
+    = & U_{t,:(1)}^{\transpose}X_{:,s(2)} \\
+    &\sim N(0,1)
+\end{split}
+\end{equation}
+
+\begin{equation}
+\begin{split}
+    E\left[U_{t,:(1)}^{\transpose}X_{:,s_1(2)}U_{t,:(1)}^{\transpose}X_{:,s_2(2)}\right] 
+    &= E\left[U_{t,:(1)}^{\transpose}X_{:,s_1(2)}\right] E\left[U_{t,:(1)}^{\transpose}X_{:,s_2(2)} \right] \\
+    &=0
+\end{split}
+\end{equation}
+where $s_1 \neq s_2$ and $s_1,s_2 \in \left[ \ell\right]$.
+
+\begin{equation}
+\begin{split}
+    E\left[U_{t_1,:(1)}^{\transpose}X_{:,s(2)}U_{t_2,:(1)}^{\transpose}X_{:,s(2)} \right] 
+    &= E\left[U_{t_1,:(1)}^{\transpose}X_{:,s(2)}X^{\transpose}_{:,s(2)}U_{t_2,:(1)}\right]  \\
+    &= U_{t_1,:(1)}^{\transpose}E\left[X_{:,s(2)}X^{\transpose}_{:,s(2)}\right]U_{t_2,:(1)}   \\
+    &= U_{t_1,:(1)}^{\transpose}U_{t_2,:(1)} \\
+    &= 0
+\end{split}
+\end{equation}
+where $t_1 \neq t_2$ and $t_1,t_2 \in \left[ \ell\right]$. Conditioned on $X_{1}$, $U^{\transpose}_{X_1}X_2$ is a random matrix with entries following i.i.d. standard Gaussian distribution.
+\fi
+
+Let the eigen-decomposition of $B$ (which is a symmetric matrix) can be decomposed into $B = Q_{B}\Lambda_{B} Q^{\transpose}_{B}$. Let $\vec z \equiv Q^{\transpose}_{B} V^{\transpose}_{1} Z^{\transpose}$, then $\left. \vec z  \right| X_1, X_2 \sim N\left(0, I_{\ell}\right)$.
+ 
+\begin{equation}     \label{eqn:temp7}
+\begin{split}
+    Z(X_1^{\transpose}X_2X_2^{\transpose}X_1)^{c_1} Z^{\transpose} 
+    &= \vec z\Lambda_{B} \vec z^{\transpose}  \\ 
+    &= \sum^{\ell}_{t = 1}\vec z^2_{t}\lambda_{t}(B) \\
+    &=\sum^{\ell}_{t = 1}\vec z^2_{t}\lambda^{c_1}_{t}(X\Sigma^2_{1} X^{\transpose}) \\
+    &\in_p   \left[\sigma^{2c_1}_{\min}(X_{1})  ,\sigma^{2c_1}_{\max}(X_{1}) \right]\sum^{\ell}_{t = 1}\vec z^2_{t}\sigma^{2c_1}_{t}(X) \\
+    &\in_p (\sqrt{n} \pm \sqrt{\ell} \pm \xi)^{2c_1}\sum^{\ell}_{t = 1}\vec z^2_{t}\sigma^{2c_1}_{t}(X)
+\end{split}
+\end{equation}
+where $\vec z_{t}$ is the $t$-th entry of $\vec z$. Let $\xi = \Theta(\log d)$. By Lemma~\ref{lem:Fnorm} we have,
+\begin{equation}
+\begin{split}
+    0 \leq \vec z^2_{t}\sigma^{2c_1}_{t}(X)
+    \leq_p (2\sqrt{\ell}+\xi)^{2c_1} (1+\xi)
+\end{split}
+\end{equation}
+
+\begin{equation}
+\begin{split}
+    \E\left[\sum^{\ell}_{t = 1}\vec z^2_{t}\sigma^{2c_1}_{t}(X) \right] 
+    & = \E\left[E\left(\left.\sum^{\ell}_{t = 1}\vec z^2_{t}\sigma^{2c_1}_{t}(X) \right|X_1,X_2 \right) \right]       \\ 
+    &=\E\left[\sum^{\ell}_{t = 1}\sigma^{2c_1}_{t}(X) \right]      
+\end{split}
+\end{equation}
+
+\myparab{When $c_1=1$:}
+\begin{equation}
+    \E\left[\sum^{\ell}_{t = 1}\sigma^{2}_{t}(X) \right]  = \ell^2
+\end{equation}
+
+Conditioned on $\vec z^2_{t}\sigma^{2}_{t}(X)
+      \in_p \left[0,  (2\sqrt{\ell}+\xi)^2(1+\xi) \right]$, we can use Hoeffding's inequality,
+\begin{equation}
+\begin{split}
+    Pr\left[ \left|\sum^{\ell}_{t = 1}\vec z^2_{t}\sigma^{2}_{t}(V) - \ell^2 \right| \geq t_1 \ell^{\frac{3}{2}} \right]  
+    &\leq   2\exp \left(-\frac{2t_1^2\ell^3}{\ell(2\sqrt{\ell}+\xi)^4 (1+\xi)^2 } \right)      
+\end{split}
+\end{equation}
+
+Let $t_1 = \xi^2$, then
+\begin{equation}
+    \sum^{\ell}_{t = 1}\vec z^2_{t}\sigma^{2}_{t}(X) \in_p  \ell^2  \pm \xi^2 \ell^{\frac{3}{2}}
+\end{equation}
+
+\begin{equation}
+\begin{split}
+    Z X_1^{\transpose}X_2X_2^{\transpose}X_1Z^{\transpose}
+    &\in_p (\sqrt{n} \pm \sqrt{\ell} \pm \xi)^{2}(\ell^2  \pm \xi^2 \ell^{\frac{3}{2}})
+\end{split}
+\end{equation}
+
+\myparab{When $c_1 = 2$:}
+\begin{equation}
+\begin{split}
+    \E\left[\sum^{\ell}_{t = 1}\sigma^{4}_{t}(X) \right]  
+    &=\E[ \|X X^{\transpose} \|^2_F]  \\ 
+    &= \ell(2\ell+\ell^2) + \ell(\ell^2-\ell) \\ 
+    &= 2\ell^3 + \ell^2
+\end{split}
+\end{equation}
+
+Again, conditioned on $\vec z^2_{t}\sigma^{4}_{t}(X)
+      \in_p \left[0,  (2\sqrt{\ell}+\xi)^4(1+\xi) \right]$, we can use Hoeffding's inequality,
+\begin{equation}
+\begin{split}
+    \Pr\left[ \left|\sum^{\ell}_{t = 1}\vec z^2_{t}\sigma^{4}_{t}(X) - (2\ell^3 + \ell^2) \right| \geq t_1 \ell^{\frac{5}{2}} \right]
+    &\leq   2\exp \left(-\frac{2t_1^2\ell^5}{\ell(2\sqrt{\ell}+\xi)^8 (1+\xi)^2 } \right)      
+\end{split}
+\end{equation}
+
+Let $t_1 = \xi^2$, then
+\begin{equation}
+    \sum^{\ell}_{t = 1}\vec z^2_{t}\sigma^{2}_{t}(X) \in_p  2\ell^3 + \ell^2 \pm \xi^2 \ell^{\frac{5}{2}}
+\end{equation}
+
+\begin{equation}
+\begin{split}
+    Z X_1^{\transpose}X_2X_2^{\transpose}X_1Z^{\transpose}
+    &\in_p (\sqrt{n} \pm \sqrt{\ell} \pm \xi)^{2}(2\ell^3 + \ell^2 \pm \xi^2 \ell^{\frac{5}{2}})
+\end{split}
+\end{equation}
+
+For the last equation in the proposition, we have
+\begin{equation}
+\begin{split}
+    Z(X_1^{\transpose}X_2)(X_2^{\transpose}X_2)^{c_2}(X_2^{\transpose}X_1) Z^{\transpose}
+    &= Z(X_1^{\transpose}X_2)V_2\Sigma^{2c_2}_2V_2^{\transpose}(X_2^{\transpose}X_1) Z^{\transpose}      \\ 
+    &\in \left[\sigma^{2c_2}_{\min}(X_2),\sigma^{2c_2}_{\max}(X_2) \right] Z X_1^{\transpose}X_2X_2^{\transpose}X_1 Z^{\transpose}    \\ 
+    &=_p (\sqrt n \pm \sqrt \ell \pm \xi)^{2+2c_2}(\ell^{2} \pm \xi^2 \ell^{\frac{3}{2}})
+\end{split}
+\end{equation}
+\end{proof}
+%{\color{red}by YW on 20190118: \Large I have changed the result in Lemma~\ref{prop:difblock_term} here, but other parts according to this lemma have not been updated yet.}
+
+\begin{lemma} \label{lem:Gaussiancdf}
+Let $\Phi(x)$ be the CDF of a standard Gaussian random variable $x$, then for any $x>0$ we have,
+\begin{equation}
+    \Phi(-x) \leq \frac{\exp \left( -\frac{x^2}{2}\right)}{x \sqrt{2\pi} }
+\end{equation}
+\end{lemma}
+
+\begin{proof}[Proof of Lemma~\ref{lem:Gaussiancdf}]
+$\Phi(x)$ is the CDF of a standard Gaussian random variable $x$. And let $f(x) \equiv \Phi(-x) - \frac{1}{x \sqrt{2\pi} }\exp \left( -\frac{x^2}{2}\right)$, then for any $x>0$ we have
+
+\begin{equation}
+\begin{split}
+f^{\prime}(x) = \frac{1}{x^2 \sqrt{2\pi} }\exp \left( -\frac{x^2}{2}\right)> 0
+\end{split}
+\end{equation}
+and
+\begin{equation}
+    \lim_{x \to \infty} f(x)= \Phi(-\infty) - \lim_{x \to \infty} \frac{\exp \left( -\frac{x^2}{2}\right)}{x \sqrt{2\pi} }= 0
+\end{equation}
+
+Therefore, $f(x) \leq 0$ for any $x>0$, i.e., $\Phi(-x) \leq \frac{\exp \left( -\frac{x^2}{2}\right)}{x \sqrt{2\pi} }$ for any $x>0$.
+\end{proof}
+
+
+\iffalse
+\subsection{The probability $\{i, j\}$ is an edge}\label{asec:probedge}
+Below is the formal result for Eq.~\ref{eqn:probedge}. 
+
+\begin{corollary}\label{cor:tunetau} Let $\epsilon$ be an arbitrary small constant. Let $\calf = (M_{i,:}, \mX, E_{i,:})$ (i.e., the $\sigma$-algebra generated by $M_{i,:}$, $\mX$ and $E$).  For a given $\ell$, there exists a constant $c_0$, a $\tau = \Theta(\sqrt \ell)$, and a negligible $\delta$ such that when $n \geq c_0 \ell$, 
+
+\begin{itemize}
+    \item If $i$ and $j$ are in the same block, then
+    \begin{equation}
+        \Pr_{\calf}\left[\Pr_{M_{j,:}, E_{j,:}}[\hat \Sigma_{i,j} \geq \tau\mid \calf] \geq 1 - \epsilon\right] \geq 1- \delta
+    \end{equation}
+    \item If $i$ and $j$ are not in the same block, then
+\begin{equation}
+        \Pr_{\calf}\left[\Pr_{M_{j,:}, E_{j,:}}[\hat \Sigma_{i,j} \geq \tau\mid \calf] \in (1\pm 0.01)   \epsilon\right] \geq 1- \delta
+    \end{equation}
+\end{itemize}
+\end{corollary}
+This lemma means for most of $M_{i,:}, \mX, E_{i,:}$, the behavior of $\Pr[\hat \Sigma_{i,j} \geq \tau\mid \calf]$ is ``not surprising'': when $i$ and $j$ are in the same block, $\{i,j\} \in E(G)$ with probability $1-\epsilon$; otherwise, $\{i, j\} \in E(G)$ with probability $\epsilon$.  
+\fi
+
+\subsection{Proof of Lemma~\ref{lem:boundSigma}}\label{asec:prooflem41}
+This section completes the proof for Lemma~\ref{lem:boundSigma}. Section~\ref{asec:boundpart1} presents the analysis for the case where $i$ and $j$ are in the same block (part 1 of the lemma). Section~\ref{asec:boundpart2} presents the analysis for the case where $i$ and $j$ are in different blocks. 
+
+
+\subsubsection{Part 1 of Lemma~\ref{lem:boundSigma} ($i$ and $j$ are in the same block)}\label{asec:boundpart1}
+Recall that
+{\color{blue} ZL to YW: check: use $\bar M_{i, :}$ or $M_{i, :}$}{\color{red}by YW: I have changed the notation.}
+
+\begin{equation}
+\begin{split}
+    n^2 V^2_{i,j} 
+    =&  \sigma^2 \bar M_{i, :}\mX_{(1)}^{\transpose}\mX_{(1)}\mX_{(1)}^{\transpose}\mX_{(1)}\bar M^{\transpose}_{i, :}   + 2\sigma^2E_{i,:}\mX_{(1)}\mX^{\transpose}_{(1)}\mX_{(1)}\bar M^{\transpose}_{i,:}  \\
+    &+\sigma^2E_{i,:}\mX_{(1)}^{\transpose}\mX_{(1)}E^{\transpose}_{i,:} + \sigma^2_{\epsilon}\|\mY_{i,:}\|^2_F 
+\end{split}
+\end{equation}
+
+We have already analyzed the first term $\sigma^2 \bar M_{i, :}\mX_{(1)}^{\transpose}\mX_{(1)}\mX_{(1)}^{\transpose}\mX_{(1)}\bar M^{\transpose}_{i, :}$. We now analyze the rest terms and show that they are in smaller orders. 
+
+
+\myparab{Analysis of term 2: $ 2\sigma^2E_{i,:}\mX_{(1)}\mX^{\transpose}_{(1)}\mX_{(1)}\bar M^{\transpose}_{i,:}$.}
+
+
+Let $G_{12} \equiv \left. 2\sigma^2E_{i,:}\mX_{(1)}\mX^{\transpose}_{(1)}\mX_{(1)}\bar M^{\transpose}_{i,:}\right|M_{i,:},\mX$. We have
+\begin{equation}
+    G_{12} \sim N(0,\Var(G_{12}))
+\end{equation}
+
+To prove that $G_{12}$ is bounded whp, we will prove in two steps: we will first show $|G_{12}| \leq_p c_0 \log d \sqrt{\Var(G_{12})}$ ($c_0>0$ is a constant), and then show that $\Var(G_{12})$ is bounded with overwhelming probability. 
+
+First, by Lemma~\ref{lem:Gaussiancdf} and with a positive constant $c_0$, we have  
+\begin{equation}
+    \Pr \left[|G_{12}| \geq c_0 \log d\sqrt{\Var(G_{12})} \right] 
+    =2 \Phi(-c_0 \log d) 
+    \leq  \frac{2\exp \left( -\frac{c^2_0 \log^2 d}{2}\right)}{c_0 \log d \sqrt{2\pi} } 
+    = \Theta(d^{-\log d})
+\end{equation}
+ This implies that
+\begin{equation} \label{eqn:temp8}
+    |G_{12}| \leq_p c_0 \log d \sqrt{\Var(G_{12})}
+\end{equation}
+
+Second, we will bound $\Var(G_{12})$. One can easily see that
+\begin{equation}
+    \Var(G_{12}) = 4\sigma^4 \sigma^2_{\epsilon} \bar M_{i, :}(\mX_{(1)}^{\transpose}\mX_{(1)})^3\bar M^{\transpose}_{i, :}
+\end{equation}
+By Lemma~\ref{prop:sameblock_term}, we have
+\begin{equation} \label{eqn:temp9}
+    \Var(G_{12}) \in_p 4\sigma^4 \sigma^2_{\epsilon} (\sqrt{n} + \sqrt{\ell} + \xi)^6 (\ell + \xi\sqrt{\ell})
+\end{equation}
+Combining two steps in Eq.~\ref{eqn:temp8} and Eq.~\ref{eqn:temp9}, we have
+\begin{equation}
+    |G_{12}| 
+    \leq_p 2c_0 (\log d) \sigma^3_x\sigma^3 \sigma_{\epsilon} (\sqrt{n} + \sqrt{\ell} + \xi)^3 \sqrt{\ell + \xi\sqrt{\ell}}
+    = O(n^{3/2}\ell^{1/2}\log d)
+    = o(n^2 \ell)
+\end{equation}
+Here we used two steps to bound a Guassian random variable $G_{12}$ whp. This is an essential technique that we will frequently use in other parts.
+
+
+\myparab{Analysis of term 3: $\sigma^2 E_{i,:}\mX_{(1)} \mX_{(1)}^{\transpose} E^{\transpose}_{i,:}$}
+
+By Lemma~\ref{prop:sameblock_term}, we have
+\begin{equation}
+    \sigma^2 E_{i,:}\mX_{(1)} \mX_{(1)}^{\transpose} E^{\transpose}_{i,:} 
+    \leq_p 
+    \sigma^2 \sigma^2_x \sigma^2_{\epsilon} (\sqrt{n} + \sqrt{\ell} + \xi)^2(\ell + \xi\sqrt{\ell})
+    = \Theta(n \ell)
+    = o(n^2 \ell)
+\end{equation}
+
+\myparab{Analysis of term 4: $\sigma^2_{\epsilon}\|\mY_{i,:}\|^2_F$.} 
+
+For $\sigma^2_{\epsilon}\|\mY_{i,:}\|^2_F$, we have 
+\begin{equation}
+    \left. \mY^{\transpose}_{i,:} \right| M_{i,:}  \sim N(0, (\|\bar M_{i,:}\|^2_F\sigma_x^2+\sigma^2_{\epsilon})I_n)
+\end{equation}
+
+By Lemma~\ref{lem:Fnorm}
+\begin{equation}
+\begin{split}
+    \|\mY_{i,:}\|^2_F | M_{i,:} 
+    &\leq_p (n \pm \xi \sqrt{n})(\|\bar M_{i,:}\|^2_F\sigma_x^2+\sigma^2_{\epsilon})  \\ 
+    &\leq_p \sigma^2_{\epsilon}(n \pm \xi \sqrt{n})\left[(\ell \pm \xi \sqrt{\ell})\sigma^2\sigma^2_x + \sigma^2_{\epsilon} \right]   
+    = \Theta(n\ell)   
+    = o(n^2 \ell)
+\end{split}
+\end{equation}
+
+One can see that the sum of terms 2 to 4 is in the order of
+ $ O(n^{3/2}\ell^{1/2}\log d) = O(n^2 \log d)$. So there is a positive constant $c$ such that 
+\begin{equation}
+    n^2V^2_{i,j} 
+    \in_{p} (1\pm \frac{c\log d}{\ell})\sigma^4\sigma^4_x[n\ell(n + \ell +1) \pm \xi^2 \ell^{\frac{5}{2}}]
+    = \Theta(n^2 \ell)
+\end{equation}
+
+
+
+
+\subsubsection{Part 2 of Lemma~\ref{lem:boundSigma} ($i$ and $j$ are in different blocks)}\label{asec:boundpart2}
+We mimic the analysis for part 1 and show that terms 2 to 4 are smaller order terms. Recall again that
+\begin{equation}
+\begin{split}
+    n^2 V^2_{i,j} 
+    =&  \sigma^2 \bar M_{i, :}\mX_{(1)}^{\transpose}\mX_{(2)}\mX_{(2)}^{\transpose}\mX_{(1)}\bar M^{\transpose}_{i, :}   + 2\sigma^2E_{i,:}\mX_{(2)}\mX^{\transpose}_{(2)}\mX_{(1)}\bar M^{\transpose}_{i,:}  \\
+    &+\sigma^2E_{i,:}\mX_{(2)}^{\transpose}\mX_{(2)}E^{\transpose}_{i,:} + \sigma^2_{\epsilon}\|\mY_{i,:}\|^2_F 
+\end{split}
+\end{equation}
+
+\myparab{Analysis of term 2: $2\sigma^2E_{i,:}\mX_{(2)}\mX^{\transpose}_{(2)}\mX_{(1)}\bar M^{\transpose}_{i,:}$}
+
+Let $G_{22} \equiv \left. 2\sigma^2E_{i,:}\mX_{(2)}\mX^{\transpose}_{(2)}\mX_{(1)}\bar M^{\transpose}_{i,:}\right|M_{i,:},\mX$. Here we use the same technique as that in the second term of the case that $i$ and $j$ are in the same block.
+
+$\Var(G_{22})$ can be bounded whp by Lemma~\ref{prop:difblock_term} as
+\begin{equation}
+\begin{split}
+    \Var(G_{22}) 
+    &= 4 \sigma^4 \sigma^2_{\epsilon}  \bar M_{i,:}\mX^{\transpose}_{(1)}\mX_{(2)}  (\mX^{\transpose}_{(2)} \mX_{(2)})\mX^{\transpose}_{(2)}\mX_{(1)}\bar M^{\transpose}_{i,:}   \\ 
+    &\in_p 4\sigma^6_x\sigma^6 \sigma^2_{\epsilon} (\sqrt{n} \pm \sqrt{\ell} \pm \xi)^4(\ell^2  \pm \xi \ell^{\frac{3}{2}}) 
+\end{split}
+\end{equation}
+
+So we have 
+\begin{equation}
+    |G_{22}| 
+    \leq_p 2c_0 (\log d) \sigma^3_x\sigma^3 \sigma_{\epsilon} (\sqrt{n} + \sqrt{\ell} + \xi)^2 \sqrt{\ell^2  + \xi \ell^{\frac{3}{2}}} 
+    = O(n \ell \log d)
+    = o(n \ell^2)
+\end{equation}
+
+
+\myparab{Analysis of term 3: $\sigma^2 E_{i,:}\mX_{(2)} \mX_{(2)}^{\transpose} E^{\transpose}_{i,:}$.}
+
+The proof here is the same as the third term in the case that $i$ and $j$ are in the same block, so we have
+\begin{equation}
+    \sigma^2 E_{i,:}\mX_{(2)} \mX_{(2)}^{\transpose} E^{\transpose}_{i,:}
+    \in_{p} 
+    \sigma^2_x \sigma^2_{\epsilon}\sigma^2 (\sqrt{n} \pm \sqrt{\ell} \pm \xi)^2 (\ell \pm \xi\sqrt{\ell})
+    =\Theta(n\ell)
+    = o(n\ell^2)
+\end{equation}
+
+
+\myparab{Analysis of term 4: $\sigma^2_{\epsilon}\|\mY_{i,:}\|^2_F$.}
+Again, according to the analysis of $i$ and $j$ in the same block,
+\begin{equation}
+     \sigma^2_{\epsilon}\|\mY_{i,:}\|^2_F 
+     \in_{p} \sigma^2_{E}(n \pm \xi \sqrt{n})\left[(\ell \pm \xi \sqrt{\ell})\sigma^2\sigma^2_x + \sigma^2_{\epsilon} \right]
+     =\Theta(n\ell)
+     = o(n\ell^2)
+\end{equation}
+
+Therefore, the sum of terms 2 to 4 is in the order of $ O(n \ell \log d)$.
+There is a positive constant $c$ such that 
+\begin{equation}
+    n^2V^2_{i,j} 
+    \in_{p} (1 \pm \frac{c\log d}{\ell}) \sigma^4\sigma^4_x [n \ell^2 \pm \xi^2 \ell^{\frac{5}{2}}]
+    = \Theta(n \ell^2)
+\end{equation}
+
+\subsection{Missing proof in Section~\ref{sec:secondmoment}}
+
+In this part, we need to analyze different cases of $i,j$ and $k$. Specifically, there are in total four cases of $i,j$ and $k$.
+\begin{itemize}
+    \item $i$, $j$ and $k$ are in the same block. Here we assume $i, j, k \in B_1$.
+    \item $i$ and $j$ are in the same block but $k$ is in a different block from which $i$ and $j$ lie in. We assume that $i,j \in B_1$ and $k \in B_2$.
+    \item $k$ is in the same block with only one of $i$ and $j$; $i$ and $j$ are in different blocks. We assume $i,k \in B_1$ and $j \in B_2$.
+    \item $i$, $j$ and $k$ are in three different blocks. Assume that $i \in B_1$, $j \in B_2$ and $k \in B_3$.
+\end{itemize}
+
+Following the outline in our analysis, the proof here is decomposed into three steps.
+
+
+
+
+\subsubsection{Proof of Step 1. Decomposition}
+
+\myparab{Proof of Lemma~\ref{lem:angle}}
+\begin{proof}
+
+ Recall that $\alpha = \frac{ \E[n^2K_i K_j]}{\E[n^2 K^2_i]}$, where $\E[n^2 K^2_i] = n^2 \Var(\hat{\Sigma}_{i,k}|\calf)$ and the scale has been proven in Lemma~\ref{lem:boundSigma}. Therefore we mainly prove the scale of $|\E[n^2 K_i K_j]|$ here, then together with Lemma~\ref{lem:boundSigma}, we will can prove the scale of $|\alpha|$.
+
+\myparab{Analysis of $|\E[K_i K_j]|$}
+
+We will solve four cases one by one in the following analysis. All four cases share the same method and they depend heavily on the technique we introduced when analyzing term 2 of $n^2V^2_{i,j}$ when $i$ and $j$ are in the same block. In other words, we have several terms for each case, and we first treat each term (conditioned on something) as a Gaussian r.v., and we have known that a Gaussian r.v. lies within $\xi$ standard deviations whp, and then with bounds (whp) of their standard deviation, we can bound each term whp .
+
+
+\myparab{1. $i, j, k \in B_1$}
+
+\begin{equation}
+\begin{split}
+    E\left[ n^2 K_i K_j \right] 
+    &=  \sigma^2 \bar M_{i, :}\mX_{(1)}^{\transpose}\mX_{(1)}\mX_{(1)}^{\transpose}\mX_{(1)}\bar M^{\transpose}_{j, :}   + \sigma^2E_{i,:}\mX_{(1)}\mX^{\transpose}_{(1)}\mX_{(1)}\bar M^{\transpose}_{j,:}  \\
+    &+ \sigma^2E_{j,:}\mX_{(1)}\mX^{\transpose}_{(1)}\mX_{(1)}\bar M^{\transpose}_{i,:}
+    +\sigma^2 E_{i,:}\mX_{(1)} \mX_{(1)}^{\transpose} E^{\transpose}_{j,:} + \sigma^2_{\epsilon}\mY_{i,:}\mY^{\transpose}_{j,:}
+\end{split}
+\end{equation}
+
+For $T_{11} \equiv \sigma^2 \bar M_{i, :}\mX_{(1)}^{\transpose}\mX_{(1)}\mX_{(1)}^{\transpose}\mX_{(1)}\bar M^{\transpose}_{j, :} $. Given $\bar M_{i,:},\mX$, $T_{11}$ is a Gaussian r.v.. 
+
+Given $\bar M_{i,:}$ and $\mX$, 
+\begin{equation}
+\begin{split}
+    \left|T_{11}\right|  
+    &\leq_p c_0 \log d \sqrt{Var(T_{11})}    \\ 
+    &= c_0 \log d  \sqrt{\sigma^6 \bar M_{i, :}(\mX_{(1)}^{\transpose}\mX_{(1)})^4\bar M^{\transpose}_{i, :}}    \\ 
+    &\leq_p c_0 \log d  \sigma^4 \sigma^4_x (\sqrt n + \sqrt \ell + \xi)^{4}\sqrt{\ell + \xi \sqrt{\ell}} 
+\end{split}
+\end{equation}
+Here we bound the variance whp by Lemma~\ref{prop:sameblock_term}.
+
+So $|T_{11}| = O(n^2\sqrt{\ell}\log d)$.
+
+In the following analysis, we will follow the same logic of $T_{11}$ here. The technique we are using is that condition one something, each term is a zero-mean Gaussian random variable; we first bound each term within $c_0 \log d$ standard deviation, and then we bound the standard deviation whp. One can easily see that difference of the result relies only on the bound (whp) of standard deviation. So for simplicity, for the following analysis, we will only prove that the whp bound of their standard deviations as $\sigma_T$ and then the absolute value of each term is $O(\sigma_T\log d)$ whp.
+
+Let $T_{12} \equiv \sigma^2E_{i,:}\mX_{(1)}\mX^{\transpose}_{(1)}\mX_{(1)}\bar M^{\transpose}_{j,:}$. By Lemma~\ref{prop:sameblock_term}, 
+\begin{equation}
+    \sqrt{\Var(T_{12}|\bar M_{i,:},\mX)}
+    = \sigma^2 \sigma_{\epsilon} \bar M_{j, :}(\mX_{(1)}^{\transpose}\mX_{(1)})^3 \bar M^{\transpose}_{j, :} =_p \Theta(n^{3/2} \sqrt{\ell})
+\end{equation}
+So $|T_{12}| = O(n^{3/2} \sqrt{\ell}\log d)$.
+
+Let $T_{13} \equiv \sigma^2E_{j,:}\mX_{(1)}\mX^{\transpose}_{(1)}\mX_{(1)} \bar M^{\transpose}_{i,:}$, then whp upper bound of $|T_{13}|$ is the same as $|T_{12}|$. 
+
+Next, let $T_{14} \equiv \sigma^2 E_{i,:}\mX_{(1)} \mX_{(1)}^{\transpose} E^{\transpose}_{j,:}$. By Lemma~\ref{prop:sameblock_term}, 
+\begin{equation}
+    \sqrt{\Var(T_{14}| E_{j,:},\mX)}
+    = \sigma \sigma^4_{\epsilon} E_{j,:}(X^{\transpose}_{(1)}X_{(1)})^2E^{\transpose}_{j,:}
+    =_p \Theta (n \sqrt{\ell})
+\end{equation}
+So $|T_{14}| = O(n \sqrt{\ell}\log d)$.
+
+Let $T_{15} \equiv \sigma^2_{\epsilon}\mY_{i,:}\mY^{\transpose}_{j,:} = n\sigma^2_{\epsilon} \hat{\Sigma}_{i,j}$.By Lemma~\ref{lem:boundSigma}, 
+\begin{equation}
+    \sqrt{\Var(T_{14}|\mY_{j,:}, \mX)}
+    = \sigma^2_{\epsilon} n \sqrt{Var\left(\hat{\Sigma}_{i,j}|\calf \right)} =_p \Theta(n \sqrt{\ell})
+\end{equation}
+So $|T_{15}| = O(n \sqrt{\ell}\log d)$.
+
+Combing all five terms here, $\left|E\left[ n^2 K_i K_j \right]\right|$ can be bounded as
+\begin{equation}
+    \left|E\left[ n^2 K_i K_j \right]\right| =_p O(n^2 \sqrt{\ell} \log d)
+\end{equation}
+
+\myparab{2. $i,j \in B_1$ and $k \in B_2$}
+
+\begin{equation}
+\begin{split}
+    E\left[ n^2 K_i K_j\right] 
+    &=  \sigma^2 \bar M_{i, :}\mX_{(1)}^{\transpose}\mX_{(2)}\mX_{(2)}^{\transpose}\mX_{(1)}\bar M^{\transpose}_{j, :}   + \sigma^2E_{i,:}\mX_{(2)}\mX^{\transpose}_{(2)}\mX_{(1)}\bar M^{\transpose}_{j,:}  \\
+    &+ \sigma^2E_{j,:}\mX_{(2)}\mX^{\transpose}_{(2)}\mX_{(1)}\bar M^{\transpose}_{i,:}
+    +\sigma^2 E_{i,:}\mX_{(2)} \mX_{(2)}^{\transpose} E^{\transpose}_{j,:} + \sigma^2_{\epsilon}\mY_{i,:}\mY^{\transpose}_{j,:}
+\end{split}
+\end{equation}
+Let $T_{2s}$ denotes the $s$-th term in the above equation($s = 1,2,\cdots, 5$).
+
+$T_{24}$ and $T_{25}$ are identical to $T_{14}$ and $T_{15}$, respectively. And $T_{23}$ has the same bound as $T_{22}$. 
+
+For $T_{21} \equiv \sigma^2 \bar M_{i, :}\mX_{(1)}^{\transpose}\mX_{(2)}\mX_{(2)}^{\transpose}\mX_{(1)}\bar M^{\transpose}_{j, :}$, by Lemma~\ref{prop:difblock_term}
+\begin{equation}
+\begin{split}
+     \sqrt{\Var(T_{21}| \bar M_{i,:},\mX) }
+    = \sqrt{\sigma^6 \bar M_{i, :}(\mX_{(1)}^{\transpose}\mX_{(2)}\mX_{(2)}^{\transpose}\mX_{(1)})^2\bar M^{\transpose}_{i, :}} =_p \Theta(n \ell^{3/2})
+\end{split}
+\end{equation}
+So $|T_{21}| =_p O( n \ell^{3/2}\log d) $.
+
+For $T_{22} \equiv \sigma^2E_{i,:}\mX_{(2)}\mX^{\transpose}_{(2)}\mX_{(1)}\bar M^{\transpose}_{j,:}$, by  ~\ref{prop:sameblock_term} we have
+\begin{equation}
+\begin{split}
+    \sqrt{\Var(T_{22}|\bar M_{j,:},\mX)}
+    =\sqrt{\sigma^4 \sigma^2_E \bar M_{j, :}\mX^{\transpose}_{(1)}\mX_{(2)}(\mX_{(2)}^{\transpose}\mX_{(2)})\mX^{\transpose}_{(2)}\mX_{(1)} \bar M^{\transpose}_{j, :}}    
+    =_p \Theta(n \ell)
+\end{split}
+\end{equation}
+So $|T_{22}| =_p O( n \ell \log d) $.
+
+Combing all five terms here, $\left|E\left[ n^2 K_i K_j \right]\right|$ can be bounded as
+\begin{equation}
+    \left|E\left[ n^2 K_i K_j \right]\right| =_p O\left(  n^2 \sqrt{\ell\left(\frac{\ell}{n} \right)^2 } \log d \right)
+\end{equation}
+
+\myparab{3. $i,k \in B_1$ and $j \in B_2$}
+
+\begin{equation}
+\begin{split}
+    E\left[ n^2 K_i K_j\right] 
+    &=  \sigma^2 \bar M_{i, :}\mX_{(1)}^{\transpose}\mX_{(1)}\mX_{(1)}^{\transpose}\mX_{(2)}\bar M^{\transpose}_{j, :}   + \sigma^2E_{i,:}\mX_{(1)}\mX^{\transpose}_{(1)}\mX_{(2)}\bar M^{\transpose}_{j,:}  \\
+    &+ \sigma^2E_{j,:}\mX_{(1)}\mX^{\transpose}_{(1)}\mX_{(1)}\bar M^{\transpose}_{i,:}
+    +\sigma^2 E_{i,:}\mX_{(1)} \mX_{(1)}^{\transpose} E^{\transpose}_{j,:} + \sigma^2_{\epsilon}\mY_{i,:}\mY^{\transpose}_{j,:}
+\end{split}
+\end{equation}
+
+Let $T_{3s}$ denotes the $s$-th term in the above equation($s = 1,2,\cdots, 5$).
+
+$T_{33},T_{34}$ is the same as $T_{13}, T_{14}$ respectively. And $T_{32}$ has the same bound as $T_{22}$. 
+
+For $T_{31} \equiv \sigma^2 \bar M_{i, :}\mX_{(1)}^{\transpose}\mX_{(1)}\mX_{(1)}^{\transpose}\mX_{(2)}\bar M^{\transpose}_{j, :}$, by Lemma ~\ref{prop:difblock_term} we have
+\begin{equation}
+\begin{split}
+     \sqrt{\Var(T_{31}|\bar M_{j,:},\mX)}  
+    =\sqrt{\sigma^6 \bar M_{j, :}\mX^{\transpose}_{(2)}\mX_{(1)}(\mX_{(1)}^{\transpose}\mX_{(1)})^2\mX^{\transpose}_{(1)}\mX_{(2)}\bar M^{\transpose}_{j, :}}    
+    =_p \Theta(n^{3/2}\ell)
+\end{split}
+\end{equation}
+So $T_{31} =_p O( n^{3/2} \ell \log d) $.
+
+Let $T_{35} \equiv \sigma^2_{\epsilon}\mY_{i,:}\mY^{\transpose}_{j,:} = n\sigma^2_{\epsilon}\hat{\Sigma}_{i,j}$. By Lemma~\ref{lem:boundSigma}
+\begin{equation}
+\begin{split}
+     \sqrt{\Var(T_{35}|\calf)}
+    = \sqrt{ \sigma^4_{\epsilon} n^2 Var\left(\hat{\Sigma}_{i,j}|\calf \right)}   
+    =_p \Theta(n^{1/2}\ell)
+\end{split}
+\end{equation}
+So $T_{35} =_p O( n^{1/2} \ell \log d) $.
+
+Combing all five terms here, $\left|E\left[ n^2 K_i K_j \right]\right|$ can be bounded as
+\begin{equation}
+    \left|E\left[ n^2 K_i K_j \right] \right|
+    =_p O\left(  n^2 \sqrt{\ell\left(\frac{\ell}{n} \right) } \log d \right)
+\end{equation}
+
+
+\myparab{4. $i \in B_1, j \in B_2$ and $k \in B_3$}
+
+\begin{equation}
+\begin{split}
+    E\left[ n^2 K_i K_j\right] 
+    &=  \sigma^2 \bar M_{i, :}\mX_{(1)}^{\transpose}\mX_{(3)}\mX_{(3)}^{\transpose}\mX_{(2)}\bar M^{\transpose}_{j, :}   + \sigma^2E_{i,:}\mX_{(3)}\mX^{\transpose}_{(3)}\mX_{(2)}\bar M^{\transpose}_{j,:}  \\
+    &+ \sigma^2E_{j,:}\mX_{(3)}\mX^{\transpose}_{(3)}\mX_{(1)}\bar M^{\transpose}_{i,:}
+    +\sigma^2 E_{i,:}\mX_{(3)} \mX_{(3)}^{\transpose} E^{\transpose}_{j,:} + \sigma^2_{\epsilon}\mY_{i,:}\mY^{\transpose}_{j,:}
+\end{split}
+\end{equation}
+
+Let $T_{4s}$ denotes the $s$-th term in the above equation($s = 1,2,\cdots, 5$).
+
+$T_{44}$ is the same as $T_{14}$, $T_{42}$ and $T_{43}$ has the same bound as $T_{22}$. Also, $T_{45}$ is the same as $T_{35}$. So we only analyze $T_{41}$.
+
+Before we prove the order of $T_{41}$, we introduce a lemma to give a whp bound for standard deviation of $\Var(T_{41}|\bar M_{j,:},\mX)$, and the proof here is similar to the second equation in Lemma~\ref{prop:difblock_term}.
+\begin{lemma} \label{prop: difblock_term2}
+
+Let $Z^{\transpose} \in \reals^{\ell}$ be a vector with entries following i.i.d. standard Gaussian distribution and $X_1, X_2, X_3 \in \reals^{n\times \ell}$ be three independent matrices with entries as i.i.d. standard Gaussian random variables. Then have
+\begin{equation}
+    Z X_2^{\transpose}X_3X_3^{\transpose}X_1X_1^{\transpose}X_3X_3^{\transpose}X_2 Z^{\transpose}
+    \leq_p (\sqrt{n} + \sqrt{\ell} + \xi)^{4}(2 \sqrt{\ell} + \xi)^{4}(\ell+\xi\sqrt{\ell})
+\end{equation}
+\end{lemma}
+
+\begin{proof} %~\ref{prop: difblock_term2}
+
+By singular value decomposition, $X_1 = U_1\Sigma_{1}V^{\transpose}_{1}$. $X_2$ and $X_3$ have the similar form of SVD.
+
+Let $\Tilde{B} \equiv \Sigma_{1}U^{\transpose}_{1}X_{3} X^{\transpose}_{3}U_{X_{2}}\Sigma_{2}$. $\Tilde{B}$ can also be decomposed as $U_{\Tilde{B}}\Sigma_{\Tilde{B}}V^{\transpose}_{\Tilde{B}}$.
+
+Let $\Tilde{z} \equiv V^{\transpose}_{\Tilde{B}} V^{\transpose}_{X_{1}} Z^{\transpose}$, then $\left. z  \right| X_1, X_2, X_3 \sim N\left(0, I_{\ell}\right)$.
+Let $P_1 \equiv U^{\transpose}_{1}X_{3}$ and $P_2 \equiv U^{\transpose}_{2}X_{3}$
+
+\begin{equation}
+\begin{split}
+    Z X_2^{\transpose}X_3X_3^{\transpose}X_1X_1^{\transpose}X_3X_3^{\transpose}X_2 Z^{\transpose}
+    &= \Tilde{z}\Sigma^2_{\Tilde{B}} \Tilde{z}^{\transpose}  \\ 
+    &=\sum^{\ell}_{t = 1}\Tilde{z}^2_{t}\sigma^2_t(\Tilde{B}) \\
+    &\leq   \sigma^{2}_{\max}(X_{1})\sigma^{2}_{\max}(X_{2}) \sum^{\ell}_{t = 1}\Tilde{z}^2_{t}\sigma^{2}_{t}(P_1P_2^{\transpose}) \\
+    &\leq \sigma^{2}_{\max}(X_{1})\sigma^{2}_{\max}(X_{2})\sigma^2_{\max}(P_1) \sigma^2_{\max}(P^{\transpose}_2) \sum^{\ell}_{t = 1}\Tilde{z}^2_{t} \\ 
+    &\leq_p (\sqrt{n} + \sqrt{\ell} + \xi)^{4}(2 \sqrt{\ell} + \xi)^{4}(\ell+\xi\sqrt{\ell})
+\end{split}
+\end{equation}
+\end{proof}
+
+
+For $T_{41} \equiv \sigma^2 \bar M_{i, :}\mX_{(1)}^{\transpose}\mX_{(3)}\mX_{(3)}^{\transpose}\mX_{(2)}\bar M^{\transpose}_{j, :}$.
+Based on ~\ref{prop: difblock_term2} we have
+\begin{equation}
+\begin{split}
+    \sqrt{\Var(T_{41}|\bar M_{j,:},\mX)} 
+    =\sqrt{\sigma^6 \bar M_{j, :}\mX^{\transpose}_{(2)}\mX_{(3)}\mX_{(3)}^{\transpose}\mX_{(1)}\mX^{\transpose}_{(1)}\mX_{(3)}\mX_{(3)}^{\transpose}\mX_{(2)}\bar M^{\transpose}_{j, :}}    
+    =_p \Theta( n \ell^{3/2} )
+\end{split}
+\end{equation}
+
+So $T_{41} =_p O( n \ell^{3/2} \log d) $.
+
+Combing all five terms here, $\left|E\left[ n^2 K_i K_j \right]\right|$ can be bounded as
+\begin{equation}
+    \left|E\left[ n^2 K_i K_j \right]\right| =_p O\left(  n^2 \sqrt{\ell\left(\frac{\ell}{n} \right)^2 } \log d \right)
+\end{equation}
+
+\myparab{Scale of $|\alpha|$}
+
+Now we only need to combine the scale of $|\E[n^2K_i K_j]|$ and $|\E[n^2K^2_i]|$ to show the scale of $|\alpha|$.
+\begin{itemize} 
+    \item Case 1: $i,j,k \in B_1$
+    \begin{equation}~\label{eqn:alphabound1}
+        |\alpha| =_p O\left(\frac{\log d \sqrt{\ell}}{\ell} \right) = O\left(\frac{\log d }{\sqrt{\ell}} \right)
+    \end{equation}
+    \item Case 2: $i,j \in B_1$ and $k \in B_2$
+    \begin{equation} ~\label{eqn:alphabound2}
+        |\alpha| =_p O\left(\frac{\log d \sqrt{\ell^3/n^2}}{\ell} \right) = O\left(\frac{\log d \sqrt{\ell}}{n} \right) = O\left(\frac{\log d }{\sqrt{\ell}} \right)
+    \end{equation}
+    \item Case 3: $i,k \in B_1$ and $j \in B_2$
+    \begin{equation} ~\label{eqn:alphabound3}
+        |\alpha| =_p O\left(\frac{\log d \sqrt{\ell^2/n}}{\ell} \right) = O\left(\frac{\log d }{\sqrt{n}} \right) =  O\left(\frac{\log d }{\sqrt{\ell}} \right)
+    \end{equation}
+    \item Case 4: $i \in B_1$, $j \in B_2$ and $k \in B_3$
+    \begin{equation} ~\label{eqn:alphabound4}
+        |\alpha| =_p O\left(\frac{\log d \sqrt{\ell^3/n^2}}{\ell^2/n} \right) =   O\left(\frac{\log d }{\sqrt{\ell}} \right)
+    \end{equation}
+\end{itemize}
+In all four cases, $|\alpha| =_p O\left(\frac{\log d }{\sqrt{\ell}} \right)$.
+
+\end{proof}
+
+
+\subsubsection{Proof of Step 2. Approximation}
+
+\myparab{Proof of Lemma~\ref{lem:calculate}}
+
+Recall that $K_j = \alpha K_i + K_i^{\bot}$, and by symmetry of $K_i $and$ K_j$, we assume $0\leq \alpha \leq 1$ wlog. 
+
+For $\Pr[|K_i| > \tau \wedge |K_j| > \tau ]$, we have
+\begin{equation}
+\begin{split}
+    \Pr[|K_i| > \tau \wedge |K_j| > \tau ]
+    =\Pr[|K_j| > \tau] - \Pr[|K_i| \leq \tau \wedge |K_j| > \tau ]  
+\end{split}
+\end{equation}
+where $\Pr[ |K_j| > \tau | |K_i| \leq \tau]$ can be calculated by
+\begin{equation} 
+\begin{split}
+    \Pr[|K_i| \leq \tau \wedge |K_j| > \tau ] 
+    = 2 \int_0^{\tau} \Pr\left[|K_j |>\tau \Big | K_i = x\right]f_{K_i}(x) dx  .
+\end{split}
+\end{equation}
+Here $f_{K_i}$ is the pdf of Gaussian r.v. $K_i$. We next focus on analyzing $\Pr[|K_j|> \tau | K_i = x]$ when $0 \leq x \leq \tau$. 
+
+We will show that when $0 \leq x \leq \tau$,
+\begin{equation} \label{eqn:temp1}
+    \Pr[|K_j|> \tau | K_i = x]
+    =Pr\left[|\alpha x + K^{\bot}_i| > \tau \right] 
+    \in \Pr[|K^{\bot}_i| > \tau] + \left[0, \frac{2f_{K^{\bot}_i}(\tau)\alpha^2 x^2 \tau}{\sigma^2_{i, \bot}}\right]
+\end{equation}
+
+For $\Pr[|K_j|> \tau | K_i = x] $ or equivalently $\Pr[|\alpha x + K^{\bot}_i|> \tau ] $ we have
+\begin{equation}\label{eqn:lowerprob}
+\begin{split}
+    \Pr[|K_j|> \tau | K_i = x] 
+    =& \Pr[K^{\bot}_i > \tau] + \Pr[K^{\bot}_i < - \tau] \\ 
+    &+ \Pr[\tau - \alpha x \leq K^{\bot}_i \leq \tau] - \Pr[-\tau - \alpha x \leq K^{\bot}_i \leq -\tau]  \\ 
+    =& \Pr[|K^{\bot}_i| > \tau] +  \int_0^{\alpha x}f_{K^{\bot}_i}(\tau - \alpha x+z) - f_{K^{\bot}_i}(\tau + z)dz
+\end{split}
+\end{equation}
+Now we will bound $\int_0^{\alpha x}f_{K^{\bot}_i}(\tau - \alpha x+z) - f_{K^{\bot}_i}(\tau + z)dz$ to prove Eq.~\ref{eqn:temp1}. Obviously, $\int_0^{\alpha x}f_{K^{\bot}_i}(\tau - \alpha x+z) - f_{K^{\bot}_i}(\tau + z)dz >0$, and therefore we will focus on the upper bound.  
+
+Let $\sigma^2_i \equiv \Var(K_i)$, $\sigma^2_j \equiv \Var(K_j)$ and $\sigma^2_{i,\bot} \equiv \Var(K^{\bot}_i)$. Here, to bound $f_{K^{\bot}_i}(\tau - \alpha x+z) - f_{K^{\bot}_i}(\tau + z)$, we need to use a Taylor expansion. Roughly speaking, we use the locally linear property of a Gaussian distribution's pdf. Therefore, this difference can be controlled by $\alpha x$. 
+
+Let $\Delta_{x_1} \equiv \frac{-(\alpha x-z)^2+2\tau(\alpha x-z)}{2\sigma^2_{i,\bot}}$, where $z \in [0,\alpha x], x \in [0,\tau]$ and $\alpha \in [0,1]$. Because $\tau \geq \alpha \tau \geq \alpha x -z$, we have $\Delta_{x_1} \geq 0$. For any $z \in [0,\alpha x]$ and $ x \in [0,\tau]$, if $\Delta_{x_1} \leq 1$, then there is a suitably small positive constant $c_4$ such that
+\begin{equation} \label{eqn:Taylorexpan1}
+\begin{split}
+    \exp \{-\frac{(\tau - \alpha x + z)^2}{2\sigma^2_{i,\bot}} \}
+    &= \exp \{-\frac{\tau^2}{2\sigma^2_{i,\bot}} \}\left( 1+\Delta_{x_1} + \sum^{\infty}_{t=2}\frac{(\Delta_{x_1})^t}{t !}  \right)   \\ 
+    &\leq \exp \{-\frac{\tau^2}{2\sigma^2_{i,\bot}} \}\left( 1+(1+c_4)\Delta_{x_1} \right) 
+\end{split}
+\end{equation}
+Here, $\Delta_{x_1} \leq 1$ for any $z \in [0,\alpha x]$ and $ x \in [0,\tau]$ is equivalent to
+\begin{equation} \label{eqn:restrict1}
+\begin{split}
+    \max_{z \in [0,\alpha x],x \in [0,\tau]} \Delta_{x_1} \leq 1
+    \Leftrightarrow -(\alpha \tau)^2+2\tau(\alpha \tau) \leq 2\sigma^2_{i,\bot}  
+    \Leftrightarrow \frac{\tau}{\sigma_{i,\bot}} \leq \sqrt{\frac{2}{2\alpha - \alpha^2}}
+\end{split}
+\end{equation}
+
+Next, we will apply Taylor expansion to $\exp \{-\frac{(\tau + z)^2}{2\sigma^2_{i,\bot}} \}$ in a similar way.
+
+Let $\Delta_{x_2} \equiv \frac{-z^2-2\tau z}{2\sigma^2_{i,\bot}}$, where $z \in [0,\alpha x], x \in [0,\tau]$ and $\alpha \in [0,1]$. We have $\Delta_{x_2} \leq 0$ here because $z \geq 0$. For any $z \in [0,\alpha x]$ and $ x \in [0,\tau]$, if $\Delta_{x_2} \geq -1$, then we have
+\begin{equation} \label{eqn:Taylorexpan2}
+\begin{split}
+    \exp \{-\frac{(\tau + z)^2}{2\sigma^2_{i,\bot}} \}
+    &= \exp \{-\frac{\tau^2}{2\sigma^2_{i,\bot}} \}\left( 1+\Delta_{x_2} + \sum^{\infty}_{t=2}\frac{(\Delta_{x_2})^t}{t !}  \right)   \\ 
+    &\geq \exp \{-\frac{\tau^2}{2\sigma^2_{i,\bot}} \}\left( 1+\Delta_{x_2} \right) 
+\end{split}
+\end{equation}
+Here, $\Delta_{x_2} \geq -1$ for any $z \in [0,\alpha x]$ and $ x \in [0,\tau]$ is equivalent to
+\begin{equation} \label{eqn:restrict2}
+\begin{split}
+    \max_{z \in [0,\alpha x],x \in [0,\tau]} \Delta_{x_2} \geq -1
+    \Leftrightarrow (\alpha \tau)^2+2\tau(\alpha \tau) \leq 2\sigma^2_{i,\bot}  
+    \Leftrightarrow \frac{\tau}{\sigma_{i,\bot}} \leq \sqrt{\frac{2}{2\alpha + \alpha^2}}
+\end{split}
+\end{equation}
+
+Since Eq.~\ref{eqn:restrict2} is a tighter bound for $\frac{\tau}{\sigma_{i,\bot}}$ than Eq.~\ref{eqn:restrict1}, the restriction used here is $\frac{\tau}{\sigma_{i,\bot}} \leq \sqrt{\frac{2}{2\alpha + \alpha^2}}$.
+
+Now with Eq.~\ref{eqn:Taylorexpan1} and Eq.~\ref{eqn:Taylorexpan2}, when $\frac{\tau}{\sigma_{i,\bot}} \leq \sqrt{\frac{2}{2\alpha + \alpha^2}}$, an upper bound for $\int_0^{\alpha x}f_{K^{\bot}_i}(\tau - \alpha x+z) - f_{K^{\bot}_i}(\tau + z)dz $ is
+\begin{equation}
+\begin{split}
+    \int_0^{\alpha x}f_{K^{\bot}_i}(\tau - \alpha x+z) - f_{K^{\bot}_i}(\tau + z)dz  
+    &\leq f_{K^{\bot}_i}(\tau ) \int_0^{\alpha x}  [(1+c_4)\Delta_{x_1} - \Delta_{x_2}]   dz     \\ 
+    &= \frac{f_{K^{\bot}_i}(\tau )\alpha^2 x^2}{\sigma^2_{i,\bot}}\left(\tau + \frac{c_4\alpha x}{6} + \frac{c_4 \tau}{2} \right)  \\ 
+    &\leq \frac{2f_{K^{\bot}_i}(\tau )\alpha^2 x^2 \tau}{\sigma^2_{i,\bot}}
+\end{split}
+\end{equation}
+
+Finally, with lower and upper bounds of $\int_0^{\alpha x}f_{K^{\bot}_i}(\tau - \alpha x+z) - f_{K^{\bot}_i}(\tau + z)dz$, we have
+\begin{equation} \label{eqn:temp4}
+\begin{split}
+    \Pr\left[|K_j |>\tau \wedge | K_i | \leq \tau \right]
+    &= 2 \int_0^{\tau} \Pr\left[|K_j |>\tau \Big | K_i = x\right]f_{K_i}(x) dx  \\ 
+    &\in 2 \int_0^{\tau} \left(\Pr[|K^{\bot}_i| > \tau ] + \left[0, \frac{2f_{K^{\bot}_i}(\tau )\alpha^2 x^2 \tau}{\sigma^2_{i,\bot}}\right] \right)f_{K_i}(x) dx    \\
+    &\in \Pr[|K^{\bot}_i| > \tau ]\Pr[|K_i| \leq \tau ] + \left[0, \frac{4f_{K^{\bot}_i}(\tau )\alpha^2 \tau}{\sigma^2_{i,\bot}}\int_0^{\tau}x^2 f_{K_i}(x)dx \right]          
+\end{split}
+\end{equation}
+where $\int_0^{\tau}x^2 f_{K_i}(x)dx 
+    = \frac{\Pr[|K^{\bot}_i| \leq \tau ]}{4} -\frac{\tau f_{K^{\bot}_i}(\tau )}{2}
+    \leq \frac{1}{4}$.
+    
+We can bound $\Pr\left[|K_j |>\tau \wedge | K_i | \leq \tau \right]$ as
+\begin{equation} \label{eqn:temp4}
+\begin{split}
+    \Pr\left[|K_j |>\tau \wedge | K_i | \leq \tau \right]
+    &\in \Pr[|K^{\bot}_i| > \tau ]\Pr[|K_i| \leq \tau ] + \left[0, \frac{f_{K^{\bot}_i}(\tau )\alpha^2 \tau}{\sigma^2_{i,\bot}} \right]
+\end{split}
+\end{equation}
+
+Transform the above result to $\Pr\left[|K_j |>\tau \wedge | K_i | \leq \tau \right]$ and we have
+\begin{equation} \label{eqn:temp9}
+\begin{split}
+    \Pr\left[|K_j |>\tau \wedge | K_i | > \tau \right]
+    &= \Pr\left[|K_j |>\tau \right] - \Pr\left[|K_j |>\tau \wedge | K_i | \leq \tau \right]  \\ 
+    &\in \Pr[|K^{\bot}_i| > \tau ]\Pr[|K_i| > \tau ] + \left[-\frac{f_{K^{\bot}_i}(\tau )\alpha^2 \tau}{\sigma^2_{i,\bot}}, 0 \right]    
+\end{split}
+\end{equation}
+
+
+\subsubsection{Proof of Step 3. Application of first moment result }
+In the result of Step 2, $\Pr[|K^{\bot}_i| > \tau ]\Pr[|K_i| > \tau ] = 4\Phi(\tau/\sigma_i)\Phi(\tau/\sigma_{i,\bot})$, which is the dominating term, and $\left[-\frac{f_{K^{\bot}_i}(\tau )\alpha^2 \tau}{\sigma^2_{i,\bot}} ,0\right]$ is the error term. We first show that the error term to be small order and then analyze the bounds for dominating term.
+
+\myparab{Scale of error term}
+We will prove there is a positive constant $c_3$ such that 
+\label{eqn: probbound}
+\begin{equation}
+    \frac{f_{K^{\bot}_i}(\tau )\alpha^2 \tau}{\sigma^2_{i,\bot}}
+    \leq \frac{c_3n \log^2d}{ \ell^{2}}
+\end{equation}
+
+First, $f_{K^{\bot}_i}(\tau ) \tau$ can be bounded as
+\begin{equation}
+\begin{split}
+    f_{K^{\bot}_i}(\tau ) \tau
+    = \frac{1}{\sqrt{\pi}}\sqrt{\frac{\tau^2}{2\sigma^2_{i,\bot}}} \exp \left(-\frac{\tau^2}{2 \sigma^2_{i,\bot}}  \right)  
+    \leq \frac{1}{\sqrt{\pi}}\sqrt{\frac{1}{2}} \exp \left(-\frac{1}{2} \right) 
+    \leq 1/4
+\end{split}  
+\end{equation}
+
+Second, for $\alpha^2/\sigma^2_{i,\bot}$, one can see that $\sigma^2_{i,\bot} = \sigma^2_j + \alpha^2 \sigma^2_i$ is close to $\sigma^2_j$ when $\alpha$ is small. And $\alpha^2/\sigma^2_{i,\bot} \approx \alpha^2/\sigma^2_{j}$. So we can prove $\alpha^2/\sigma^2_{i,\bot} =_p O\left(\frac{n \log^2 d}{\ell^{3}}\right)$ with Corollary~\ref{cor:alphasigma}, then we complete our proof.
+
+\begin{corollary}\label{cor:alphasigma}
+Using the notation above, we have
+\begin{equation}
+   \frac{\alpha^2 \sigma^2_i}{\sigma^2_j} =_p O\left(\frac{\log^2 d}{\ell} \right)
+\end{equation}
+and
+\begin{equation}
+    \frac{\alpha^2}{\sigma^2_{i,\bot}} =_p O\left(\frac{n \log^2 d}{\ell^{3}}\right)
+\end{equation}
+\end{corollary}
+
+\myparab{Proof of Corollary~\ref{cor:alphasigma}}
+\begin{proof}
+
+Recall that $\sigma^2_{i,\bot} = \sigma^2_j + \alpha^2 \sigma^2_i$.
+According to the scale of $\alpha$ in four cases (Eq.~\ref{eqn:alphabound1},Eq.~\ref{eqn:alphabound2},Eq.~\ref{eqn:alphabound3} and Eq.~\ref{eqn:alphabound4}) and Lemma~\ref{lem:boundSigma}, we have
+\begin{itemize}
+    \item Case 1: $i,j,k \in B_1$.
+    
+    Since $\sigma^2_i$ and $\sigma^2_j$ are in the same scale, together with $\alpha =_p O\left(\frac{\log d }{\sqrt{\ell}} \right)$, we have
+    \begin{equation}
+        \frac{\alpha^2 \sigma^2_i}{\sigma^2_j} =_p O\left(\frac{\log^2 d}{\ell} \right) = o(1)
+    \end{equation}
+    and then
+    \begin{equation}
+        \frac{\alpha^2}{\sigma^2_{i,\bot}} =_p O\left(\frac{\log^2 d }{\ell} \times \frac{1}{\ell} \right) = O\left(\frac{\log^2 d }{\ell^{2}} \right) 
+    \end{equation}
+    
+    \item Case 2: $i,j \in B_1$ and $k \in B_2$
+    
+    Similar to case 1, $\sigma^2_i$ and $\sigma^2_j$ are in the same scale, together with $\alpha =_p O\left(\frac{\log d \sqrt{\ell}}{n} \right)$, we have
+    \begin{equation}
+        \frac{\alpha^2 \sigma^2_i}{\sigma^2_j} =_p O\left(\frac{\ell \log^2 d }{n^2} \right) = o(1)
+    \end{equation}
+    and then
+    \begin{equation}
+        \frac{\alpha^2}{\sigma^2_{i,\bot}} =_p O\left(\frac{\ell \log^2 d }{n^2} \times \frac{n}{\ell^2}\right) =O\left(\frac{\log^2 d }{n \ell} \right)
+    \end{equation}
+    
+    \item Case 3: $i,k \in B_1$ and $j \in B_2$
+    
+    $\alpha =_p O\left(\frac{\log d }{\sqrt{n}} \right)$ and then $\alpha^2 \sigma^2_i =_p O\left( \frac{\ell \log^2 d }{n} \right)$. Since $\sigma^2_j =_p \Theta \left( \frac{\ell^2 }{n} \right)$, we have
+    \begin{equation}
+        \frac{\alpha^2 \sigma^2_i}{\sigma^2_j} =_p O\left(\frac{\log^2 d}{\ell} \right) = o(1)
+    \end{equation}
+    and then
+    \begin{equation}
+        \frac{\alpha^2}{\sigma^2_{i,\bot}} =_p  O\left(\frac{\log^2 d }{n} \times \frac{n}{\ell^2} \right) =  O\left(\frac{ \log^2 d }{\ell^2} \right)
+    \end{equation}
+    \item Case 4: $i \in B_1$, $j \in B_2$ and $k \in B_3$
+    
+    Similar to case 1, $\sigma^2_i$ and $\sigma^2_j$ are in the same scale, together with $\alpha =_p O\left(\frac{\log d }{\sqrt{\ell}} \right)$, we have
+    \begin{equation}
+        \frac{\alpha^2 \sigma^2_i}{\sigma^2_j} =_p O\left(\frac{\log^2 d}{\ell} \right) = o(1)
+    \end{equation}
+    and then
+    \begin{equation}
+         \frac{\alpha^2}{\sigma^2_{i,\bot}} =_p  O\left(\frac{\log^2 d }{\ell} \times \frac{n}{\ell^2}\right) = O\left(\frac{n \log^2 d}{\ell^{3}}\right)
+    \end{equation}
+\end{itemize}
+For all four cases, we have $\frac{\alpha^2 \sigma^2_i}{\sigma^2_j} =_p O\left(\frac{\log^2 d}{\ell} \right)$ and $\frac{\alpha^2}{\sigma^2_{i,\bot}} =_p O\left(\frac{n \log^2 d}{\ell^{3}}\right)$.
+
+\myparab{Bounds of dominating term}
+
+According to Corollary~\ref{cor:alphasigma}, $\alpha^2\sigma^2_i/\sigma^2_j =_p O(\log^2 d/\ell)$, thus $\sigma^2_{i,\bot} = \sigma^2_j + \alpha^2 \sigma^2_i \in_p (1 \pm O(\log^2 d/\ell)) \sigma^2_j$. Then we have 
+\begin{equation}
+     \Phi\left(-\frac{\tau}{\sigma_{i,\bot}}\right) \in_p \Phi\left(-\frac{\tau}{\sigma_j\sqrt{1 \pm O(\log^2 d/\ell)} }\right)
+     = \Phi\left(-\frac{\tau}{\sigma_j}\left(1 \pm O(\log^2 d/\ell)\right)\right) 
+\end{equation}
+Because $\tau = \Theta\left(\sqrt{\ell}\right)$, $\tau/\sigma_j = \Theta(1)$. And then we have $ \Phi\left(-\tau/ \sigma_{i,\bot}\right) \in_p \Phi\left(-\tau/ \sigma_{j}\right) \pm O(\log^2 d/\ell) $.
+
+Now we focus on the bounds for $\Phi\left(-\tau/ \sigma_{i}\right)$ ($\Phi\left(-\tau/ \sigma_{i}\right)$ share the same results).
+
+\mypara{When $i$ and $k$ are in the same block}
+
+By Lemma~\ref{lem:boundSigma}, we have $\sigma^2_i \in_p \sigma^4\sigma^4_x (\ell+\ell^2/n)  \pm O(\xi^2 \sqrt{\ell})$, then using Taylor expansion, $\sigma_i \in_p \sigma^2\sigma^2_x \sqrt{\ell+\ell^2/n} (1 \pm O(\xi^2 /\sqrt{\ell}))$. Next, we apply the result to $\Phi(\tau/\sigma_i)$. Let $z_1 \equiv \tau(\sigma^2\sigma^2_x \sqrt{\ell+\ell^2/n})^{-1}$, and we have
+\begin{equation}
+    \Phi\left(-\frac{\tau}{\sigma_i}\right) \in_p  \Phi\left(-\frac{z_1}{1 \pm O(\xi^2 /\sqrt{\ell})}\right) 
+    =  \Phi\left(-z_1\left(1\pm O(\xi^2 /\sqrt{\ell})\right) \right) 
+\end{equation}
+Recall that we set $\tau = \Theta\left(\sqrt{\ell}\right)$, so $z_1 = \Theta(1)$, and we continue our analysis 
+\begin{equation}
+    \Phi\left(-\frac{\tau}{\sigma_i}\right) \in_p \Phi\left(-z_1 \right) \pm O(\xi^2 /\sqrt{\ell})
+\end{equation}
+
+Let $\epsilon_1 \equiv 1 - 2\Phi\left(-z_1 \right)$ and then $2\Phi\left(-\tau/\sigma_i\right) \in_p (1-\epsilon_1) \pm O(\xi^2 /\sqrt{\ell})$ when $i,k$ are in the same block.
+
+\mypara{When $i$ and $k$ are in different blocks}
+
+By Lemma~\ref{lem:boundSigma}, we have $\sigma^2_i \in_p \sigma^4\sigma^4_x \ell^2/n \pm O(\xi^2 \sqrt{\ell})$, then using Taylor expansion, $\sigma_i \in_p \sigma^2\sigma^2_x\ell/\sqrt{n}(1 \pm O(\xi^2 /\sqrt{\ell}))$. Next, we apply the result to $\Phi(\tau/\sigma_i)$. Let $z_2 \equiv \tau(\sigma^2\sigma^2_x \ell/\sqrt{n})^{-1}$, and we have
+\begin{equation}
+    \Phi\left(-\frac{\tau}{\sigma_i}\right) \in_p  \Phi\left(-\frac{z_2}{1 \pm O(\xi^2 /\sqrt{\ell})}\right) 
+    =  \Phi\left(-z_2\left(1\pm O(\xi^2 /\sqrt{\ell})\right) \right) 
+\end{equation}
+Similarly, by $\tau = \Theta\left(\sqrt{\ell}\right)$, we have $z_2 = \Theta(1)$, and then 
+\begin{equation}
+    \Phi\left(-\frac{\tau}{\sigma_i}\right) \in_p \Phi\left(-z_2 \right) \pm O(\xi^2 /\sqrt{\ell})
+\end{equation}
+
+Let $\epsilon_2 \equiv 2\Phi\left(-z_2 \right)$ and then $2\Phi\left(-\tau/\sigma_i\right) \in_p \epsilon_2 \pm O(\xi^2 /\sqrt{\ell})$ when $i,k$ are in different blocks.
+
+\mypara{Wrap up}
+
+The condition in Step 2 is not restrictive here because $\frac{\tau}{\sigma_{i,\bot}} =_p \Theta(1)$ and $\alpha =_p O(\log d/\sqrt{\ell})$.
+
+\begin{equation}
+    \frac{\tau}{\sigma_{i,\bot}} =_p \Theta(1) \leq_p \sqrt{\frac{2}{2\alpha+\alpha^2}} =_p \omega(1)
+\end{equation}
+
+Note that $\Phi\left(-\tau/ \sigma_{j}\right)$ also has the above results. In addition, we have shown that $\Phi\left(-\tau/ \sigma_{i,\bot}\right) \in_p \Phi\left(-\tau/ \sigma_{j}\right) \pm O(\log^2 d/\ell)$, where $\log^2 d/\ell = o(\xi^2 /\sqrt{\ell})$, so $\Phi\left(-\tau/ \sigma_{i,\bot}\right)$ has the same results as $\Phi\left(-\tau/ \sigma_{i}\right)$.
+
+Because $\epsilon_1 \equiv 1-2\Phi\left(-\tau\left(\sigma^2\sigma^2_x \sqrt{\ell+\ell^2/n}\right)^{-1}\right)$ and $\epsilon_2 \equiv 2\Phi\left(-\tau(\sigma^2\sigma^2_x \ell/\sqrt{n})^{-1}\right)$, there always exists a proper $\tau$ such that $\epsilon_1 = \epsilon_2$. Also, one can see that $z_2/z_1 \approx \sqrt{n/\ell}$. So for any small positive constant $\epsilon < 0.5$, there is exist a constant $c_0$ and $\tau$ such that when $n>c_0\ell$, $\epsilon_1 = \epsilon$ and $\epsilon_2 = \epsilon$. 
+
+Now we finish our proof of Proposition~\ref{prop:interaction}.
+\end{proof}
+
+
+\subsection{Putting everything together}
+\begin{proof}
+
+There are two cases of $|N(i) \cap N(j)|$ (conditioned on $\calf$) and each case has two terms. Here we assume $k$ is a different node from $i,j$.
+\begin{itemize}
+    \item When $i,j$ are in the same block, we assume $i,j \in B_1$ wlog. 
+    \begin{equation}
+        |N(i) \cap N(j)| \big| \calf = \sum_{k \in B_1}(|\hat \Sigma_{i,k}| > \tau \wedge |\hat \Sigma_{j,k}| > \tau| \calf) + \sum_{k \notin B_1}(|\hat \Sigma_{i,k}| > \tau \wedge |\hat \Sigma_{j,k}| > \tau| \calf)
+    \end{equation}
+    and by Proposition~\ref{prop:interaction}
+    \begin{equation}
+        \E[|N(i) \cap N(j)|\big| \calf] \in_p  (\ell-2)(1 -\epsilon)^2 + (d - \ell)\epsilon^2 \pm O(\xi^2d/\sqrt{\ell}) 
+    \end{equation}
+    \item When $i,j$ are in different blocks, we assume $i\in B_1$ and $j \in B_2$ wlog. 
+    \begin{equation}
+        |N(i) \cap N(j)| \big| \calf= \sum_{k \in B_1\cup B_2}(|\hat \Sigma_{i,k}| > \tau \wedge |\hat \Sigma_{j,k}| > \tau| \calf) + \sum_{k \notin B_1 \cup B_2}(|\hat \Sigma_{i,k}| > \tau \wedge |\hat \Sigma_{j,k}| > \tau| \calf)
+    \end{equation}
+    and by Proposition~\ref{prop:interaction}
+    \begin{equation}
+        \E[|N(i) \cap N(j)|\big| \calf] \in_p  (2\ell-2)(1 -\epsilon)\epsilon + (d - 2\ell)\epsilon^2 \pm O(\xi^2d/\sqrt{\ell}) 
+    \end{equation}
+\end{itemize}
+
+We first show that conditioned on $\calf$, $|N(i) \cap N(j)|$ concentrates to its expectation, then we will analyze $\E[|N(i) \cap N(j)|\big| \calf]$ to prove that there is a sufficient ``gap'' between $\E[|N(i) \cap N(j)|\big| \calf]$ of the above two cases to distinguish them with overwhelming probability.
+
+\mypara{Concentration.}
+
+$|N(i) \cap N(j)| \big| \calf$ is the sum of two terms, which are independent binomial random variables.
+
+By~\cite{mitzenmacher2005probability}, if $X \sim B(n,p)$ is a binomial r.v., and then the Chernoff bound gives :
+\begin{equation} \label{eqn:biconcentrate1}
+    \Pr[X \leq (1-t)n p] \leq \exp \{ -t^2 n p/2 \}
+\end{equation}
+and 
+\begin{equation} \label{eqn:biconcentrate2}
+    \Pr[X \geq (1+t)n p] \leq \exp \{ -t^2 n p/ (2+ t) \}
+\end{equation}
+where $t \in [0,1]$.
+
+Each term of $|N(i) \cap N(j)| \big|\calf$ has at least $\ell-2$ i.i.d. Bernoulli random variables with a constant scale probability of being 1. Let $t= \xi^2/\sqrt{\ell}$, and then by Eq.~\ref{eqn:biconcentrate1} and Eq.~\ref{eqn:biconcentrate2}, we know that $|N(i) \cap N(j)|\big|\calf \in (1 \pm \xi^2/\sqrt{\ell}) \E[|N(i) \cap N(j)| \big| \calf]$ with overwhelming probability ($1-\exp\{ \Theta(-\xi^2) \}$).
+
+\mypara{Expectation.}
+
+Let $D$ be the the difference of $\E[|N(i) \cap N(j)| \big| \calf]$ between the case $i,j$ are in the same block and otherwise. So we have, 
+\begin{equation}\label{eqn:D1}
+    D \in_p \ell(1-2\epsilon)^2 - 2(1-\epsilon)^2 + 2(1-\epsilon)\epsilon \pm O(\xi^2d/\sqrt{\ell}) = \ell(1-2\epsilon)^2 \pm O(\xi^2d/\sqrt{\ell})
+\end{equation}
+
+To distinguish two cases, sum of $(\xi^2/\sqrt{\ell}) \E[|N(i) \cap N(j)| \big| \calf]$ in two cases should be smaller than $D$. I.e.,
+\begin{equation}\label{eqn:D2}
+    D > (\xi^2/\sqrt{\ell})\left[ (\ell-2)(1-\epsilon)^2 + (2\ell-2)(1 -\epsilon)\epsilon + (2d - 3\ell)\epsilon^2 \pm O(\xi^2 d/\sqrt{\ell}) \right] = O(\xi^2d/\sqrt{\ell})
+\end{equation}
+By Eq~\ref{eqn:D1} and Eq.~\ref{eqn:D2}, the condition for our algorithm to efficiently distinguish two nodes (rows) in the same block from those in different blocks is:
+\begin{equation}
+   \xi^2 d/\sqrt{\ell} = o(\ell) \Leftrightarrow \ell = \omega (d^{2/3}\xi^{4/3})
+\end{equation}
+
+{\color{red}by YW: should we replace $\xi$ by a polynomial $\log d$?}
+
+Now we have proven that $|N(i) \cap N(j)| \big| \calf$ is concentrated and the difference between $i,j$ in the same block and otherwise is sufficient enough to distinguish the two cases with overwhelming probability, and this result does not depend on any specific values in $\calf$. So $|N(i) \cap N(j)|$ has the same property. Finally, with a union bound, we prove Theorem~\ref{thm:main}. 
+{\color{red}Is it a rigorous analysis?}
+\end{proof}
+

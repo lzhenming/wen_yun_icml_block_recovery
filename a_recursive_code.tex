@@ -1,0 +1,35 @@
+\section{Recursive algorithms}\label{asec:recursive}
+This section describe algorithms for Corollary~\ref{cor:recursive}. $\proc{Robust-Neighbor-Find-Blocks}$ in Fig.~\ref{fig:robustneighbor_algo} explains how we can modify $\proc{Neighbor-Find-Blocks}$ to handle general input and make sure all blocks of size $\geq \ell_{\max}/2$ are returned. $\proc{Recursive-Find-Blocks}$ in Fig.~\ref{fig:recursiveneighbor_algo} gives the recursive algorithm for solving the general BSR, where $\ell_{\max}/\ell_{\min} = \omega(1)$. 
+
+\begin{figure}
+{\small
+    \centering
+    \begin{codebox}
+\Procname{$\proc{Robust-Neighbor-Find-Blocks}(\mY, \ell_{\max})$}
+\li \Comment This algorithm is a wrapper of $\proc{Neighbor-Find-Blocks}$. 
+\li \Comment It allows $\ell_i < \ell_{\max}/2$. \li \Comment It guarantees to find all blocks of size $\geq \ell_{\max}/2$.
+\li $\hat B_1, \hat B_2, \dots \hat B_k \gets \proc{Neighbor-Find-Blocks}(\mY)$
+\li  $\calb \gets \{\hat B_i: |\hat B_i| \geq \ell_{\max}/2\}$.
+\li \Return $\calb$. 
+\end{codebox}
+}
+\caption{A robust algorithm to find all blocks of size $\geq \ell_{\max}/2$.}
+    \label{fig:robustneighbor_algo}
+\end{figure}
+
+
+\begin{figure}
+{\small
+    \centering
+    \begin{codebox}
+\Procname{$\proc{Recursive-Find-Blocks}(\mY, \ell_{\max})$}
+\li \Comment $\ell_{\max}$ is an upper bound of the size of the largest block and will change as we recurse. 
+\li $\calb \gets \proc{Robust-Neighbor-Find-Blocks}(\mY, \ell_{\max})$.
+\li Let $\mY_r$ be the submatrix of $\mY$ induced by columns outside $\calb$. 
+\li $\calb_r \gets \proc{Recursive-Find-Blocks}(\mY_r, \ell_{\max}/2)$
+\li \Return $\calb \cup \calb_r$.
+\end{codebox}
+}
+\caption{A recursive algorithm to find blocks for the case where $\ell_{\max}/\ell_{\min} = \omega(1)$.}
+    \label{fig:recursiveneighbor_algo}
+\end{figure}

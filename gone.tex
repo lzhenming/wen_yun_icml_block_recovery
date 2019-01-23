@@ -1,0 +1,91 @@
+
+{\color{red} ZL: really need to check the way we use measure-theoretic language.}
+{\color{red}by YW on 20190118: Start of modified part}
+Let $\xi = \Theta(\log d)$. Conditioned on $\mX$,
+\begin{equation}
+\begin{split}
+    \lambda_{t}(B)\Tilde{m}^2_t 
+    \leq_p \lambda_{t}(B) (1+\xi)
+\end{split}
+\end{equation}
+Then only conditioning on $\mX_{(1)}$, we have
+\begin{equation}
+\begin{split}
+    \lambda_{t}(B) (1+\xi)
+    \leq_p (2\sqrt{\ell}+\xi)^2 (1+\xi)
+\end{split}
+\end{equation}
+which does not depend on $\mX_{(1)}$. We have
+\begin{equation}
+\begin{split}
+    0 \leq \lambda_{t}(B)\Tilde{m}^2_t
+    \leq_p (2\sqrt{\ell}+\xi)^2 (1+\xi)
+\end{split}
+\end{equation}
+
+Given $\lambda_{t}(B)\Tilde{m}^2_t \in_p \left[0,  (2\sqrt{\ell}+\xi)^2 (1+\xi) \right]$, we can use Hoeffding's inequality,
+{\color{red} ZL on 20190110: you have two $t$'s, 
+$\sum_{t = 1}^{\ell}$ and $\lambda_t(B)$.}
+{\color{blue}by YW:Sorry, I have correct it as below, but can we use $t_1$?}
+
+\begin{equation}
+\begin{split}
+    \E\left[\sum^{\ell}_{t = 1}\lambda_{t}(B)\Tilde{m}^2_t \right] 
+    & = \E\left[\E\left(\left.\sum^{\ell}_{t = 1}\lambda_{t}(B)\Tilde{m}^2_t \right|\mX \right) \right]       \\ 
+    &=\E\left[\sum^{\ell}_{t = 1}\lambda_{t}(B) \right]      \\ 
+    &= \ell^2
+\end{split}
+\end{equation}
+
+\begin{equation}
+\begin{split}
+    \Pr\left[ \left|\sum^{\ell}_{t = 1}\lambda_{t}(B)\Tilde{m}^2_t - \ell^2 \right| \geq t_1 \ell^{\frac{3}{2}} \right]  
+    &\leq   2\exp \left(-\frac{2t_1^2\ell^3}{\ell(2\sqrt{\ell}+\xi)^4 (1+\xi)^2 } \right)     
+\end{split}
+\end{equation}
+
+Let $t_1 = \xi^2$. {\color{red} ZL which $t$ are you referring to?} then
+\begin{equation}
+    \sum^{\ell}_{t = 1}\lambda_{t}(B)\Tilde{m}^2_t \in_p  \ell^2  \pm \xi^2 \ell^{\frac{3}{2}}
+\end{equation}
+
+Together with 
+\begin{equation}
+    (\sqrt{n} - \sqrt{\ell} - \xi)\sigma_x
+    \leq_p 
+    \sigma_{\min}(\mX_{(1)})
+    \leq
+    \sigma_{\max}(\mX_{(1)})
+    \leq_p
+    (\sqrt{n} + \sqrt{\ell} + \xi)\sigma_x
+\end{equation}
+
+we have
+\begin{equation}
+    \sigma^2 \bar M_{i, :}\mX_{(1)}^{\transpose}\mX_{(2)}\mX_{(2)}^{\transpose}\mX_{(1)}M^{\transpose}_{i, :}  
+    \in_p \sigma^4_x \sigma^4 (\sqrt{n} \pm \sqrt{\ell} \pm \xi)^2(\ell^2  \pm \xi^2 \ell^{\frac{3}{2}})
+\end{equation}
+
+{\color{red}by YW on 20190118: End of modified part. The result changed here is the change from $(\ell^2  \pm \xi^2 \ell)$ to $(\ell^2  \pm \xi^2 \ell^{\frac{3}{2}})$.}
+
+
+
+
+{
+\color{blue} 
+Move out
+Analyzing the leading term also highlights the most interesting high dimensional structure that we rely on. We next focus on showing that 
+
+\begin{equation}\label{eqn:leading}
+    \sigma^2 \bar M_{i, :}\mX_{(1)}^{\transpose}\mX_{(1)}\mX_{(1)}^{\transpose}\mX_{(1)}\bar M^{\transpose}_{i, :}  
+    \in_p \sigma^4_x \sigma^4 (\sqrt{n} \pm \sqrt{\ell} \pm \xi)^4 (\ell \pm \xi \sqrt{\ell}), 
+\end{equation}
+where $\xi = \Theta(\log d) $, $\xi < \sqrt{\ell}/2$. {\color{red} fix in next iter.}
+
+(\ref{eqn:leading}) asserts that the random variable $\hat \Sigma_{i, k} \mid M_{i, :}, \mX, E_{i,:}$ is a Gaussian random variable with a \emph{concentrated variance}. 
+Let $I(\cdot)$ be an indicator function that sets to one if and only if the parameter is true. We can see that $\sum_{k} I(\hat \Sigma_{i, k} \geq \tau) \mid M_{i,:}, \mX, E_{:, i}$ are highly concentrated by using a simple Chernoff bound. 
+We shall also compare this concentration result with JL-based analysis. In JL-based analysis, because we do not have sufficient samples, no concentration results can be established. Here, we use concentration results on $\mX$'s extreme singular values (see below), and the conditional independence of  
+$\hat \Sigma_{i,j}$ to circumvent limited sample size problem. 
+
+We next prove (\ref{eqn:leading}).
+}

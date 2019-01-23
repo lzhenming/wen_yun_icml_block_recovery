@@ -1,0 +1,124 @@
+\section{Additional building block and Missing proofs in Section~\ref{sec:prelim} }\label{asec:missingprelim}
+
+\subsection{proof of Lemma~\ref{lem:Fnorm}}
+Proving the expectation is straightforward. We next outline how we use Chernoff bounds to prove (\ref{eqn:fnormconcentrate}). 
+
+One can see that
+\begin{equation}
+    \|\mX\|^2_F = \sum^n_{i=1}\sum^{\ell}_{j=1} X^2_{i,j} \sim \chi^2(n \ell)
+\end{equation}
+
+%Based on Chernoff bound and MGF of Chi-square distribution, $\Pr\left[ \|\mX\|^2_F - \E[\|\mX\|^2_F] \geq t \sqrt{n\ell} \right]$ is bounded as:
+
+Next, we may use the standard exponentiation trick 
+\begin{equation}
+     \Pr\left[ \|\mX\|^2_F - \E[\|\mX\|^2_F] \geq t \sqrt{n\ell} \right] 
+     \leq \frac{E\left[\exp \{t'\|\mX\|^2_F\} \right]}{\exp \{t' (n\ell + t \sqrt{n\ell})\}} 
+     = \frac{(1-2t')^{-n\ell/2}}{\exp \{t' (n\ell + t \sqrt{n\ell})\}}, 
+\end{equation}
+where $t > 0$ is a parameter in our bound and $t' < \frac 1 2$ is the tuning parameter in the Chernoff bound trick. 
+%where $t' < 1/2$ and $t>0$ is a constant. 
+
+
+Set $t' = \frac{t}{2(\sqrt{n\ell}+t)} < \frac{1}{2}$. We have
+
+\begin{equation}
+\begin{split}
+     \Pr\left[ \|\mX\|^2_F - \E[\|\mX\|^2_F] \geq t \sqrt{n\ell} \right] 
+     \leq \frac{(1-\frac{t}{\sqrt{n\ell}+t})^{-n\ell/2}}{\exp \{t\sqrt{n\ell}/2\}} 
+\end{split}
+\end{equation}
+
+Let $g_1(t)\equiv \ln \left( \frac{(1-\frac{t}{\sqrt{n\ell}+t})^{-n\ell/2}}{\exp \{t\sqrt{n\ell}/2\}}\right)$, We shall next show that $g_1(t) \leq -\frac{t^2}{4(1+c_1)}$ where $c_1 \geq \frac{t}{\sqrt{n\ell}}$.
+
+Let $G_1(t) \equiv g_1(t) - \left( -\frac{t^2}{4(1+c_1)}\right) $,
+We have
+\begin{equation}
+\begin{split}
+    \frac{dG_1(t)}{dt} 
+    &= \frac{n\ell}{2(\sqrt{n\ell}+t)} - \frac{\sqrt{n\ell}}{2}+\frac{t}{2(1+c_1)} \\
+    &= -\frac{t}{2(1+t/\sqrt{n\ell})} + \frac{t}{2(1+c_1)} \\
+    & \leq 0
+\end{split}
+\end{equation}
+where $c_1 \geq \frac{t}{\sqrt{n\ell}}$. This shows that $G_1(t)$ is a monotone decreasing function with respect to $t$ $(t>0)$.
+
+$G_1(t)$ is a continuous function for $t\geq 0$ and we have:
+\begin{equation}
+\begin{split}
+    &G_1(t) \leq G_1(0) = 0 \\
+    & g_1(t) \leq -\frac{t^2}{4(1+c_1)}
+\end{split}
+\end{equation}
+
+Therefore $\Pr\left[ \|\mX\|^2_F - \E[\|\mX\|^2_F] \geq t \sqrt{n\ell} \right]$ can be bounded as:
+\begin{equation}
+\begin{split}
+     \Pr\left[ \|\mX\|^2_F - \E[\|\mX\|^2_F] \geq t \sqrt{n\ell} \right] 
+     \leq \frac{(1-\frac{t}{\sqrt{n\ell}+t})^{-n\ell/2}}{\exp \{t\sqrt{n\ell}/2\}} 
+     \leq \exp\{-\frac{t^2}{4(1+c_1)}\}
+\end{split}
+\end{equation}
+where $c_1 \geq \frac{t}{\sqrt{n\ell}}$.
+
+
+%Again, apply Chernoff bound and MGF of Chi-square distribution to $\Pr\left[ \|\mX\|^2_F - \E[\|\mX\|^2_F] \leq -t \sqrt{n\ell} \right]$ and then we have:
+
+We next bound $\Pr\left[ \|\mX\|^2_F - \E[\|\mX\|^2_F] \leq -t \sqrt{n\ell} \right]$. We have
+\begin{equation}
+     \Pr\left[ \|\mX\|^2_F - \E[\|\mX\|^2_F] \leq -t \sqrt{n\ell} \right] 
+     \leq \frac{E\left[\exp \{-t'\|\mX\|^2_F\} \right]}{\exp \{-t' (n\ell - t \sqrt{n\ell})\}} 
+     = \frac{(1+2t')^{-n\ell/2}}{\exp \{-t' (n\ell - t \sqrt{n\ell})\}}
+\end{equation}
+where $t' > -1/2$ and $0<t<\sqrt{n\ell}$. 
+
+Let $t' = \frac{t}{2(\sqrt{n\ell}-t)} > -\frac{1}{2}$, the above inequality is transformed as:
+
+\begin{equation}
+\begin{split}
+     \Pr\left[ \|\mX\|^2_F - \E[\|\mX\|^2_F] \leq -t \sqrt{n\ell} \right] 
+     \leq \frac{(1+\frac{t}{\sqrt{n\ell}-t})^{-n\ell/2}}{\exp \{-t\sqrt{n\ell}/2\}} 
+\end{split}
+\end{equation}
+
+Let $g_2(t)\equiv \ln \left( \frac{(1+\frac{t}{\sqrt{n\ell}-t})^{-n\ell/2}}{\exp \{-t\sqrt{n\ell}/2\}}  \right)$We next show that $g_2(t) \leq -\frac{t^2}{4(1-c_2)}$, where $0 \leq c_2 \leq \frac{t}{\sqrt{n\ell}}$.
+
+Let $G_2(t) \equiv g_2(t) - \left( -\frac{t^2}{4(1-c_2)}\right)$.
+\begin{equation}
+\begin{split}
+    \frac{dG_2(t)}{dt} 
+    &= -\frac{n\ell}{2(\sqrt{n\ell}-t)} + \frac{\sqrt{n\ell}}{2}+\frac{t}{2(1-c_2)} \\
+    &= -\frac{t}{2(1-t/\sqrt{n\ell})} + \frac{t}{2(1-c_2)} \\
+    & \leq 0
+\end{split}
+\end{equation}
+where $0<t<\sqrt{n\ell}$ and $0 \leq c_2 \leq \frac{t}{\sqrt{n\ell}}$. This shows that $G_2(t)$ is a monotone decreasing function with respect to $t$$(t>0)$.
+
+$G_2(t)$ is a continuous function for $t\geq 0$ and we have:
+\begin{equation}
+\begin{split}
+    &G_2(t) \leq G_2(0) = 0 \\
+    & g_2(t) \leq -\frac{t^2}{4(1-c_2)}
+\end{split}
+\end{equation}
+
+Therefore $\Pr\left[ \|\mX\|^2_F - \E[\|\mX\|^2_F] \leq -t \sqrt{n\ell} \right]$ can be bounded as:
+\begin{equation}
+\begin{split}
+     \Pr\left[ \|\mX\|^2_F - \E[\|\mX\|^2_F] \leq -t \sqrt{n\ell} \right] 
+     \leq \frac{(1+\frac{t}{\sqrt{n\ell}-t})^{-n\ell/2}}{\exp \{-t\sqrt{n\ell}/2\}} 
+      \leq \exp\{-\frac{t^2}{4(1-c_2)}\}
+\end{split}
+\end{equation}
+
+Combining two cases together, when $t \leq \sqrt{n\ell}$ we have
+\begin{equation}
+\begin{split}
+     \Pr\left[ \left|\|\mX\|^2_F - \E[\|\mX\|^2_F]\right| \leq -t \sqrt{n\ell} \right] 
+     \leq 2 \exp\{-t^2/8\}
+\end{split}
+\end{equation}
+
+
+
+

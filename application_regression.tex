@@ -1,0 +1,27 @@
+\subsection{Application to regressions}
+{\color{red} we now start to change $\epsilon$ to $\varepsilon$.}
+We now use our BRP solver to solve the regression problem $\my = M \mx + \varepsilon$ and compare our performance against baselines (shrinkage and variable selection methods). We assume the uniform block size case here and our arguments can be generalized. Note that we perform an average case analysis here, instead of taking a Bayesian approach (assuming prior of $M$). 
+
+Our algorithm consists of two steps. First, we invoke $\proc{Find-Blocks}$ to identify block structures. Then we run a regression model for each block. See Fig.~\ref{fig:regression_algo}. 
+
+\begin{lemma}\label{lem:regression} Consider using $\proc{Regression-Solver}$ to estimate $M$. Let $\hat M$ be the algorithm's output. Then for any $i \in [d]$:
+$\frac{\langle \hat M_{i, :}, M_{i, :}\rangle}{\|M_{i, :}\|^2} \in_p 1\pm 0.01$
+\end{lemma}
+
+
+\begin{proof}Let $B_j$ be the block that contains $i$. Recall that $\mX_{(j)}$ ($\mY_{(j)}$) is the submatrix of $\mX$ ($\mY$) that consists of only those columns in $B_j$. 
+
+We have 
+\begin{equation}
+    \begin{split}
+    & \langle \hat M_{i, :}, M_{i, :} \rangle
+     = \langle (\mX^{\transpose}_{(j)}\mX_{(j)})^{-1}\mX^{\transpose}_{(j)}(\mX_{(j)} \bar M_{i, :} + E_{:, i}), \bar M_{i, :} \rangle \\
+     &= \|\bar M_{i, :}\|^2 + \bar M_{i, :}  (\mX^{\transpose}_{(j)}\mX_{(j)})^{-1}\mX^{\transpose}_{(j)}E_{:, i}
+    \end{split}
+\end{equation}
+First, note that $\|\bar M_{i}\|^2 =_p \Theta(\sigma^2 \ell)$. Next, the matrix $(\mX^{\transpose}_{(j)}\mX_{(j)})^{-1}$ is full rank and all its singular values are in $\frac{1\pm 0.01}{\sigma^2_x n}$ with overwhelming probability. We can also see that $\|\mX^{\transpose}_{(j)}E_{:, i}\| \in_p \Theta(\sigma_x \sigma_{\epsilon}\sqrt{\ell n})$. We can see that $\bar M_{i, :}  (\mX^{\transpose}_{(j)}\mX_{(j)})^{-1}\mX^{\transpose}_{(j)}E_{:, i} \in_p \tilde O(1)$ and is a smaller order term. 
+\end{proof}
+
+\myparab{Comparison to baselines.} We now show that ridge-regression and variable selection methods do not work when $n = \Theta(\ell)$. The estimator for ridge regression is $\tilde M = (\mX^{\transpose}\mX + \lambda I)^{-1}\mX^{\transpose}\mY$. We note that $\lambda$ needs to be large in our setting because the rank of $\mX$ is $n$ and is much smaller than its dimension. Thus, we may use the approximation $(\mX^{\transpose}\mX + \lambda I) \approx \lambda I$ and show that for any $i$ with constant probability $\langle \tilde M_{i, :}, M_{i, :}\rangle < 0$. Note that when this angle is smaller than $0$, the forecast is worse than trivial (which always forecast 0). 
+
+We can also see that when we use standard variable selection methods, the false positive rate needs to be constant and thus, with constant probability this model produces forecasts that are worse than trivial. 

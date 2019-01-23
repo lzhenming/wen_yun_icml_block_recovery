@@ -1,0 +1,79 @@
+\section{Overview of our algorithm}
+%We have two algorithmic results, optimized for the uniform and non-uniform block sizes respectively. The theoretical properties of these algorithms are summarized below. 
+{\color{red} remember to define $\ell (= \ell_{\max})$; remember to change algorithm name.}
+This section gives an overview of our result and provides intuition for our analysis. We develop two algorithms. The first algorithm $\proc{Neighbor-Find-Blocks}$ is a polynomial time one. The second one $\proc{Graph-Cluster-Find-Blocks}$ is a weaker one that relies on a graph-clustering oracle but it resembles heuristics that are widely used (e.g.,~\cite{ari2002clustered,jacob2009clustered,huang2012learning}); thus performance analysis of this algorithm explains why these heuristics work.  Both algorithms use graph-based techniques. Our analysis focuses on the $\proc{Neighbor-Find-Blocks}$ and discussions on $\proc{Graph-Cluster-Find-Blocks}$ are deferred to Appendix~\ref{asec:clustering}.
+
+
+\begin{theorem}\label{thm:main} Consider the block discovery problem,  where $\ell_1 \geq \ell_2 \geq \dots \geq \ell_{\kappa}$ such that $\ell_1 / \ell_{\kappa} < 2$ and $\ell_1 \geq d^{\frac 2 3} \log^2d$. There exists a polynomial-time algorithm that outputs $\hat B_1, \dots \hat B_{\kappa}$ such that 
+with overwhelming probability  $\hat B_{\pi(i)} = B_i$ for all $i \in [\kappa]$ for some  permutation $\pi$ on $[\kappa]$.
+{\color{red}by YW: change $\ell_1 \geq d^{\frac 2 3} \log^2d$ in next iteration.}
+%\textbf{When the sizes of all the blocks are uniform:} let $\ell$ be the block size and $\ell \geq d^{\frac 2 3} \log^2 d$. Let $c$ be a suitably large constant and $n > c\ell$.There exists a polynomial-time algorithm that outputs $\hat B_1, \dots \hat B_k$, each of which is of size $\ell$, such that  with overwhelming probability  $|\hat B_{\pi(i)} - B_i| = o(1)$ for all $i \in [k]$ for some  permutation $\pi$ on $[k]$.
+
+
+%\textbf{When the sizes of all the blocks are all different:} Let $\epsilon$ be an arbitrary small constant and $c$ (that depends on $\epsilon$) be a suitably large constant. Let $n > c \ell_{\max}$. 
+%Assume that (i) $\ell_k$ is polynomial in $d$, (ii) $\ell_k/\ell_{1} > c$ for some small constant $c$, (iii) we have oracle access to a $\densegraph$ solver, and (iv) we know the values of $\ell_i$ ($i \leq k$). There exists an algorithm that uses the oracle to produce $\hat B_1, \hat B_2, \dots, \hat B_k$ and there exists a $\pi$ such that $|\hat B_{i} \cap B_{\pi(i)}| \leq 5\epsilon \ell_i$. In other words, the total number of mis-classified nodes is at most $5\epsilon d$.  
+
+\textbf{Lower bound:}
+ There exists a constant $c_0$ such that when $n \leq c_0 \ell_{\max}$,  for any algorithm that attempts to solve the BSR problem, with constant probability it errs on a large constant fraction (say 40\%) of the rows.
+\end{theorem}
+
+We make three remarks. First, the label of the blocks are unidentifiable, so we can only recover the blocks up to a permutation. Second, we may use a simple recursive trick to circumvent the $\ell_1 / \ell_k < 2$ condition. See Corollary~\ref{cor:recursive}. Finally, for exposition purpose, our analysis assumes that $\ell_i$ are uniform (i.e., $\ell = \ell_i$ for all $i$). Generalizing this result to the case $\ell_1 / \ell_k < 2$ is straightforward.  
+
+%when the block sizes are uniform, the block labels are unidentifiable and thus our algorithm can recover only the blocks up to a permutation. Even when the block sizes are non-uniform, the unidentifiable problem persists because there can be blocks of similar/same sizes. 
+%Second, for the non-uniform case, the constants in the assumptions are not optimized for exposition purpose. Also, because we aim to build an algorithm that has a constant classification error rate for the non-uniform case, when $\ell_i = o(\ell_1)$ we may not be able to detect a non-trivial portion of nodes in $B_i$. Thus, we assume that $\ell_k / \ell_1 = \Theta(1)$. It remains an open problem to solve the case that $\ell_k/\ell_1 = o(1)$. Finally, the assumption that we know $\{\ell_i\}_{i \leq k}$ can be relaxed by using the standard guessing trick (guess each $\ell_i$ sequentially). 
+
+\begin{figure}
+{\small
+    \centering
+    \begin{codebox}
+\Procname{$\proc{Neighbor-Find-Blocks}(\mY)$}
+\li $\hat \Sigma = \frac{1}{n}\mY^{\transpose} \mY$
+\li \Comment \textbf{Construct $G$}
+\li $\tau = c_0 \sqrt \ell$ \Comment $c_0$ is a suitable constant (discussed in Sec.~\ref{sec:firstmoment}).
+\li $V(G) \gets [d]$
+\li \For $i \neq j \in [d]$
+\li \Do \If $|\hat \Sigma_{i,j}| > \tau$ \Comment $\theta$ is a parameter tuned in Sec.~\ref{sec:secondmoment}.
+\li \Then  Insert $\{i, j\} \in E(G)$
+\End
+\End
+\li \Comment \textbf{Produce $\calo$}
+\li Let $\calo \in \reals^{d \times d}$; entries initialized to $0$.
+\li \For $i < j \in [d]$
+\li \Do \If $|N(i) \cap N(j)| > \theta$
+\li \Then $\calo_{i,j} = 1$
+\End
+\End
+\li Treat $\calo$ as the adjacency matrix of a graph.
+\li Let $\hat B_1, \dots \hat B_k$ be the connected components of $\calo$.
+\li \Return $\hat B_1, \dots \hat B_k$. 
+\end{codebox}
+}
+\caption{Our algorithm to detect blocks for the case in which the block sizes are uniform.}
+    \label{fig:neighbor_algo}
+\end{figure}
+
+\myparab{Intuition.} 
+Let us start with assuming that we have oracle access to $\Sigma = \langle M_{i, :}, M_{j, :}\rangle$. We observe that 
+\emph{(i) When $i$ and $j$ are \textbf{not} in the same block:} $\Sigma_{i,j} = \langle M_{i,:}, M_{j, :}\rangle = 0$; \emph{(ii) When $i$ and $j$ are in the same block:} First,{\color{red}by YW:on one hand?} 
+    $\E_M[\Sigma_{i,j}] = 0$ because $\E_M[\langle M_{i, :}, M_{j, :}\rangle] = 0$ by our assumption on $M$'s distribution. On the other hand, a significant
+    fraction of $\Sigma_{i,j}$ will deviate from $0$ by anti-concentration results of Gaussian random variables. 
+
+
+\mypara{$\mX M^{\transpose}$ as Johnson-Lindenstrauss transform.} The above observation suggests that we may check whether $\Sigma_{i,j} = \langle M_{i, :}, M_{j, :} \rangle \neq 0$ to determine whether $i$ and $j$ are in the same block but we do not directly observe $\langle M_{i, :}, M_{j, :} \rangle$. Our crucial observation is that $\mX$ is a matrix with restricted isometry property~\cite{candes2008restricted} and therefore, we may view $\mX M^{\transpose}$ as randomly projecting row vectors onto a Euclidean space so that their pairwise distances/angles are preserved. Specifically, we observe that \emph{(i) The expectation is correct:} $\E[( M_{i, :} \mx)( M_{j, :} \mx ) \mid M] = \langle M_{i, :}, M_{j, :} \rangle.$ \emph{(ii) Insufficient number of samples:} to make sure all pairwise distances/angles are estimated correctly, a union bound (over all possible pairs) has to be paid. In our specific setting, Johnson-Lindenstrauss (JL) type arguments work only when $n = \Omega (\ell \log \ell)$, where the $\log \ell$ term comes from the union bound. 
+    
+
+
+\mypara{Our solution.} The story so far is that it is impossible to accurately estimate the angles of all possible pairs of $M_{i, :}$ and $M_{j, :}$ by merely inspecting $\hat \Sigma_{i,j}$ (i.e., the local interactions between $i$ and $j$). Such phenomenon also arises in many graph inference problems.  
+For example, in a stochastic block model~\cite{abbe2017community} or a latent space model (LSM)~\cite{abraham2015low,li2017world}, we cannot determine whether nodes $i$ and $j$ belong to the same block or are close in latent space by inspecting whether $\{i, j\}$ is an edge. 
+
+To circumvent the problem, graph inference algorithms often need to rely on ``global information.'' In LSM, one needs to count the number of shared connections between two nodes to determine their closeness~\cite{abraham2015low} and in SBM, one can use spectral clustering to determine block structures~\cite{rohe2011spectral}. 
+
+We can generalize graph-based algorithmic techniques to leverage ``global information'' in a similar manner. Specifically we shall build a graph $G$ with the node set $[d]$ and $\{i, j\} \in E(G)$ if and only if $|\hat \Sigma_{i,j}| $ is sufficiently large. We then may use global information from $G$ to discover the block structure. Our two algorithmic results resemble the algorithms by~\cite{abraham2015low,rohe2011spectral}. 
+One ($\proc{Neighbor-Find-Blocks}$; see Fig.~\ref{fig:neighbor_algo}) uses~\cite{abraham2015low}'s solution to count the number of shared neighbors to determine whether two nodes are in the same block. The other one ($\proc{Graph-Cluster-Find-Blocks}$ discussed in App.~\ref{asec:clustering}) uses a clustering algorithm similar to~\cite{rohe2011spectral} to determine the blocks. 
+
+%Both algorithms share the same set of analytic tools so the remainder of this paper focuses on only the uniform block size case. The non-uniform block size case is analyzed in App.~\ref{asec:clustering}.
+
+%\myparab{Organization of the analysis.} In Section {\color{blue} X and X}, we analyze our algorithm in Fig.~\ref{fig:neighbor_algo}. We shall first analyze the statistical properties of $\hat \Sigma_{i,j}$. Then we will analyze the ``second moment'' of $G$, that is when $\{i, j\}$ and $\{i, k\}$ will be in $E(G)$ simultaneously.  
+
+
+

@@ -1,0 +1,71 @@
+
+
+\section{Introduction}
+
+This paper studies a stylized, yet widely applicable ``signal recovery'' problem: let $M \in \reals^{d \times d}$ be an unknown matrix, and $\{\mx_t\}_{t\in [n]} \in \reals^{d}$ be i.i.d samples from a Gaussian distribution. We observe a small collection of  measurements $\my_t = M \mx_t + \varepsilon_t$, where $t \in [n]$ and $\varepsilon_t$ is a zero mean noise. 
+Our goal is to recover the ``structure'' of $M$ by only $\{\my_t\}_t$ using samples that are sub-linear in $d$ (i.e., solve the problem in high-dimensional setting). This problem and its variations (e.g., when $\{\mx_t\}_t$ are also observed) are extensively studied in the literature partly because of their close connections to prediction problems. For example, when $M$ is assumed to be low rank, the problem reduces to factor models, and we can use PCA-based techniques to solve it (\cite{stock2011dynamic}). If in addition when $M$
+ is assumed to be sparse, the problem becomes a sparse PCA problem~\cite{birnbaum2013minimax}. On the other hand, when $M$ is low rank and $\varepsilon_t$'s are sparse, the problem reduces to a Principle Component Pursuit problem~\cite{zhou2010stable}.
+ 
+ 
+Our paper assumes that $M$ possesses a \emph{block structure}, that is, after permuting the rows and columns of $M$, it will exhibit block structure. Studying this problem is important for both practical and theoretical reasons. First, matrices with block diagonal structure frequently arise in practice. For example, factors in a time-series model may exhibit clustered structure~\cite{bouveyron2014model}, or the covariates in a regression model may exhibit spatial structure (i.e., some covariates are ``far away'' from the response so their corresponding coefficients are small) so that the coefficient matrices essentially form blocks~\cite{lam2013regularization,lam2016detection,guo2016high,otto2018estimation}. Thus, the need to design practical solutions for these problems is acute. Second, block diagonal matrices are neither sparse nor low rank. Therefore, existing shrinkage-based theoretical tools (see e.g.,~\cite{tibshirani1996regression,negahban2011estimation}) developed for high-dimensional settings are not applicable. New algorithmic theory is needed to tackle these problems. 
+
+Our work consists of three components (contributions). 
+
+\myparab{1. Model and problem formulation.} Our first major contribution is the introduction of a \emph{tractable} model for block matrices with \emph{practically relevant} assumptions. Our model exhibits rich statistical and combinatorial structure while it properly reflects key characteristics observed in empirical studies. %Thus it is practically relevant. 
+
+We next describe our model and \textbf{Block Signal Recovery Problem} (BSR). Let $\cald$ be a distribution on 
+$\reals^{d \times d}$. $\cald$ is a \emph{stochastic block distribution} if there is a partition $B_1, B_2, \dots B_{\kappa}$ of $[d]$ such that $M_{i,j}$ is an independent sample from $N(0, \sigma_{i,j})$, where 
+\begin{equation}
+\sigma_{i,j} = \left\{
+\begin{array}{ll}
+\sigma & \mbox{ if $i, j$ in the same block }\\
+0 & \mbox{otherwise.}
+\end{array}
+\right. 
+\end{equation}
+%Here, we allow $k = \omega(1)$ so that the number of blocks needs not to be a constant. 
+
+We let $M$ be sampled from the stochastic block distribution. We also let $\mx_t$ ($t \in [n]$) be i.i.d. samples from $N(0, \sigma^2_x I_d)$, where $I_d \in \reals^{d \times d}$ is an identity matrix, and $\varepsilon$ be i.i.d. samples from $N(0, \sigma^2_{\epsilon} I_d)$, where $I_d$ is a $d \times d$ identity matrix.  %{\color{red}should we use $N(\mu,\sigma)$ or $N(\mu,\sigma^2)$ and $\sigma_X$ or $\sigma_x$? ZL: chnaged. Please check again.}  
+
+Recall that $\my_t = M \mx_t + \varepsilon_t$. The BSR problem asks to design a sample-optimal algorithm to determine whether $i$ and $j$ belong to the same block (for any $i, j \in [d]$) by  using observations $\{\my_t\}_{t \in [n]}$. 
+
+\myparab{2. Tight characterization of sample complexity and new algorithmic techniques.} We aim to develop algorithm that can handle the case, in which $\kappa = \omega(1)$ (i.e., the block number can grow). Our main positive result is that $n$ needs to be linear in  $\ell_{\max} = \max|B_i|$ (the size of the largest block), instead of $d$ (the ``length'' of $M$), to recover all blocks with overwhelming probability. We will also provide a lower bound of $\Omega(\ell_{\max})$ samples, and thus the result is tight.
+
+\mypara{New combinatorial techniques for regularization.} Regularization is needed to tackle high-dim problems. The optimal algorithms we develop rely heavily on graph-theoretic techniques, instead of shrinkage ones. We shall construct a graph $G$ with the node set $[d]$ so that the edges are produced based on thresholding the covariance matrix of $\my$. Thus, our problem of discovering the blocks reduces to finding structures in $G$. We design two algorithms. 
+
+The first algorithm runs in polynomial time. It resembles the latent position inference algorithm for graph~\cite{abraham2015low}: it leverages ``second order information'' (i.e., counting the number of shared neighbors) to determine whether two nodes/rows are in the same block. 
+
+The second algorithm relies on the assumption that it has an oracle access to a clustering solver, a standard assumption used in many recent analyses for graph mining algorithms~\cite{rohe2011spectral,wolfe2013nonparametric,olhede2014network}. 
+The algorithm simply runs a clustering algorithm on $G$ (with suitable objective), resembling the clustering-based algorithm developed by SBM from~\cite{rohe2011spectral}. While this algorithm is weaker (because it uses an oracle), it is similar to heuristics developed in practice so it explains why they work. 
+
+
+%works for problems having non-uniform sizes of blocks (so it is more general). This second algorithm relies on the assumption that we have an oracle access to a clustering solver, a standard assumption used in many recent analyses for graph mining algorithms~\cite{rohe2011spectral,wolfe2013nonparametric,olhede2014network}. 
+
+Our two algorithms leverages techniques introduced from graph-mining but the analytic techniques are significantly different. All existing tractable graph models assume the edges are sampled independently~\cite{abbe2017community} whereas our graphs are constructed through the empirical covariance matrix. Thus, the edges are correlated so new probabilistic techniques are needed to handle correlated edges.  
+
+\myparab{3. Application to high-dim regression.}
+A main application of our result is to solve the high-dimensional regression problem 
+%(sometimes also referred to as multi-task learning~\cite{caruana1997multitask}) 
+$\my \sim M \mx + \varepsilon$, in which $M$ exhibits block structure. Our major finding is that there exists an algorithm that produces non-trivial forecasts with high probability using only $O(\ell) = o(d)$ samples. The algorithm is a simple two-step procedure. First, we use our solver for BSR to partition the coordinates in $y$ into blocks. Then we run a standard linear regression for each block. On the other hand, standard shrinkage or variable selection methods cannot produce non-trivial forecasts with only $O(\ell_{\max})$ samples.  
+
+Clustering-based heuristics are developed to solve the regression problem~\cite{ari2002clustered,jacob2009clustered,stock2011dynamic,huang2012learning,buhlmann2013correlated,witten2014cluster,cameron2015practitioner,delattre2016mixtures,bulteel2016clustering,seki2018regression,yamada2016localized}, some of which resemble our two-step solution and requires surprisingly small $n$ for some datasets. Our result explains why these heuristics work and 
+introduces a more principled clustering method with provable guarantee. 
+
+%we often need to regularize the estimator. For example, by using LASSO~\cite{tibshirani1996regression}, we shrink entries of $\hat M$ to zero, or by using nuclear-norm based regularization~\cite{negahban2011estimation}, we shrink $\hat M$ to a low rank matrix.
+   
+
+
+
+%{\color{blue} We compare the result to the standard variable selection or shrinkage methods that require $O(\log(1/\delta))$ samples to produce non-trivial forecasts.}
+
+
+
+
+%Recovering the structure of $M$ is important for three reasons: \emph{Reason 1. Wide applicability:} Many high dimensional learning and multi-task learning problems CITE in practice require us to estimate a transition matrix with a block structure. Solving our signal recovery problem helps us to design prediction algorithms with optimal sample complexity (see below for more discussions. % \emph{Reason 2. Fundamental information theory and statistics problem:} Existing (theoretical) investigation focuses on only the cases where $M$ and/or $\epsilon_t$ exhibit low rank or sparse structure. In our setting, $M$ is neither sparse nor low rank, so no off-the-shelf algorithm is available. New algorithmic techniques are needed to tackle this new problem that is pervasive in practice. 
+%\emph{Reason 3. Close connections to statistical models for graphs:} Our problem relates closely to the stochastic block model (SBM) in graphs (see e.g.,~\cite{abbe2017community} and references therein), where the goal is also to recover $M$ via a noisy observation of it. In SBM a random graph $G$ with vertex set $[d]$ is observed. The probability that $\{i, j\}$ is an edge is $M_{i,j}$. We want to show the deep theoretical connection between our problem and the SBM. In general, investigating such connections allows us to translate combinatorial techniques originally developed for graph-learning into powerful building blocks for signal recovery and high dimensional regression. 
+ 
+ 
+\mypara{Generalization.} Many of our assumptions are made  for the purpose of presenting an intuitive analysis. For example, $\sigma_{i,j}$ can be non-zero when $i$ and $j$ are in different blocks so long as it is sufficiently small. $M$ does not need to be a square matrix, $\mx_t$ can have non-identity covariance matrix, and $\varepsilon$ can deviate from the standard Gaussian. 
+{\color{red} See Section X for more discussions.}
+
+{\color{blue} Need discussions on the randomized setting.}
